@@ -32,10 +32,8 @@ content:
   - menu: This is first menu!
     id: first_menu
     content:
-
       - menu: And this is first submenu.
         id: first_submenu
-        
         content:
           - page: This is first page.
             id: first_page
@@ -51,7 +49,6 @@ content:
 
   - menu: This will be second menu.
     content:
-    
       - page: Second page here.
         id: second_page
         persistence: False
@@ -75,7 +72,6 @@ content:
 
   - menu: Third menu.
     content:
-    
       - page: Fourth page here.
         id: fourth_page
         persistence: True
@@ -101,4 +97,3 @@ content:
           long
           text.
 ```
-
