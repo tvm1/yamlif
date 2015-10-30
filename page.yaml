@@ -64,8 +64,8 @@ content:
   - menu: third_menu
     title: Third menu.
     content:
-      - page: Fourth page here.
-        title: fourth_page
+      - page: fourth_page
+        title: Fourth page here.
         persistence: True
         type: textarea
         content:
