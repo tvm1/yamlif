@@ -47,26 +47,34 @@ def clean_curses():
 def draw_selector(screen, yamlobj):
     maxy, maxx = screen.getmaxyx()
 
-    menu = get_menulist(yamlobj)
+    cur_id = []
+
+    menu_ids, menu_titles, mid, mtitle = get_menulist(yamlobj)
     msel = 0
 
-    size_y = len(menu) + 2
-    size_x = len(max(menu, key=len)) + 2
+    cur_id.append(mid)
+
+    size_y = len(menu_titles) + 2
+    size_x = len(max(menu_titles, key=len)) + 2
+
+    if size_x < len(mtitle) + 2:
+        size_x = len(mtitle) + 2
 
     pos_y = int(maxy / 2 - size_y / 2)
     pos_x = int(maxx / 2 - size_x / 2)
 
-    screen.addstr(0, 2, 'ARROWS: Move up/down  ENTER/SPACE: Enter menu  ESC: Exit menu  Q: Quit')
+    screen.addstr(0, 2, ' ARROWS: Move up/down | ENTER/SPACE: Enter menu | ESC: Exit menu | Q: Quit ')
+    screen.addstr(maxy - 1, 2, ' Current position: ' + str(''.join(str(e) for e in cur_id)) + ' ')
 
     win = curses.newwin(size_y, size_x, pos_y, pos_x)
 
     win.border()
     win.attron(curses.A_BOLD)
 
-    # win.addstr(0, int(size_x / 2 - len(title) / 2), title)
+    win.addstr(0, int(size_x / 2 - len(mtitle) / 2), mtitle)
 
     while True:
-        for i, mitem in enumerate(menu):
+        for i, mitem in enumerate(menu_titles):
             mitem = mitem.ljust(size_x - 2)
             if msel == i:
                 win.addstr(i + 1, 1, str(mitem), curses.color_pair(1))
@@ -78,23 +86,47 @@ def draw_selector(screen, yamlobj):
 
         if ckey == curses.KEY_UP:
             if msel == 0:
-                msel = len(menu) - 1
+                msel = len(menu_titles) - 1
             else:
                 msel += -1
 
         if ckey == curses.KEY_DOWN:
-            if msel == len(menu) - 1:
+            if msel == len(menu_titles) - 1:
                 msel = 0
             else:
                 msel += 1
 
         if ckey == curses.KEY_ENTER or ckey == 10:
+            draw_popup(screen, 'Hi!')
             del win
             return msel
 
         if ckey == ord("q"):
             clean_curses()
             quit(0)
+
+
+def draw_popup(screen, text='empty'):
+    maxy, maxx = screen.getmaxyx()
+
+    size_x = len(text) + 2
+
+    pos_y = int(maxy / 2 - 3)
+    pos_x = int(maxx / 2 - size_x / 2)
+
+    win = curses.newwin(3, size_x, pos_y, pos_x)
+
+    win.border()
+    win.attron(curses.A_BOLD)
+
+    win.addstr(1, 1, str(text))
+
+    win.getch()
+    win.attroff(curses.A_BOLD)
+
+    del win
+    screen.touchwin()
+    screen.refresh()
 
 
 def open_yaml(yfile):
@@ -114,15 +146,20 @@ def print_structure(yamlobj, lvl=0, ):
 
 
 def get_menulist(yamlobj):
-    menuarr = []
+    menu_ids = []
+    menu_titles = []
+    mid = yamlobj['menu']
+    mtitle = yamlobj['title']
 
     for obj in yamlobj['content']:
         if 'menu' in obj:
-            menuarr.append(obj["menu"])
+            menu_ids.append(obj["menu"])
+            menu_titles.append(obj["title"])
         elif 'page' in obj:
-            menuarr.append(obj["page"])
+            menu_ids.append(obj["page"])
+            menu_titles.append(obj["title"])
 
-    return menuarr
+    return menu_ids, menu_titles, mid, mtitle
 
 
 def main():
@@ -133,7 +170,8 @@ def main():
     yamlobj = open_yaml(sys.argv[1])
     stdscr = init_curses()
 
-    draw_selector(stdscr, yamlobj)
+    while True:
+        draw_selector(stdscr, yamlobj)
 
     clean_curses()
 
