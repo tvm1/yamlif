@@ -103,6 +103,7 @@ def draw_selector(screen, menu_titles, mtitle, msel):
 
         if ckey == 27:
             return -1
+            # TODO: implement this
 
     win.refresh()
 
