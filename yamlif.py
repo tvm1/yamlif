@@ -49,7 +49,7 @@ def draw_selector(screen, yamlobj):
 
     cur_id = []
 
-    menu_ids, menu_titles, mid, mtitle = get_menulist(yamlobj)
+    menu_ids, menu_titles, mid, mtitle = get_menulist(yamlobj, True)
     msel = 0
 
     cur_id.append(mid)
@@ -103,6 +103,7 @@ def draw_selector(screen, yamlobj):
             elif eltype == 'menu':
                 # TODO:
                 # get_menulist(get_nodecontent(yamlobj, menu_ids[msel]))
+                # print(get_nodecontent(yamlobj, menu_ids[msel]))
                 pass
 
             win.border()
@@ -156,19 +157,31 @@ def print_structure(yamlobj, lvl=0, ):
             print('|' + lvl * ' ' + '-' + ' ' + obj["page"])
 
 
-def get_menulist(yamlobj):
+def get_menulist(yamlobj, root=False):
     menu_ids = []
     menu_titles = []
-    mid = yamlobj['menu']
-    mtitle = yamlobj['title']
 
-    for obj in yamlobj['content']:
-        if 'menu' in obj:
-            menu_ids.append(obj["menu"])
-            menu_titles.append(obj["title"])
-        elif 'page' in obj:
-            menu_ids.append(obj["page"])
-            menu_titles.append(obj["title"])
+    if root is True:
+        mid = yamlobj['menu']
+        mtitle = yamlobj['title']
+
+        for obj in yamlobj['content']:
+            if 'menu' in obj:
+                menu_ids.append(obj["menu"])
+                menu_titles.append(obj["title"])
+            elif 'page' in obj:
+                menu_ids.append(obj["page"])
+                menu_titles.append(obj["title"])
+    else:
+        mid = yamlobj['menu']
+        mtitle = yamlobj['title']
+        for obj in yamlobj:
+            if 'menu' in obj:
+                menu_ids.append(obj["menu"])
+                menu_titles.append(obj["title"])
+            elif 'page' in obj:
+                menu_ids.append(obj["page"])
+                menu_titles.append(obj["title"])
 
     return menu_ids, menu_titles, mid, mtitle
 
