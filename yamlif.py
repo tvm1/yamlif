@@ -44,10 +44,11 @@ def clean_curses():
     curses.endwin()
 
 
-def draw_selector(screen, title="empty", menu=None, msel=0):
-    if not menu:
-        menu = ["empty"]
+def draw_selector(screen, yamlobj):
     maxy, maxx = screen.getmaxyx()
+
+    menu = get_menulist(yamlobj)
+    msel = 0
 
     size_y = len(menu) + 2
     size_x = len(max(menu, key=len)) + 2
@@ -55,14 +56,14 @@ def draw_selector(screen, title="empty", menu=None, msel=0):
     pos_y = int(maxy / 2 - size_y / 2)
     pos_x = int(maxx / 2 - size_x / 2)
 
-    screen.addstr(0, 2, 'Welcome to YAMLIF!')
+    screen.addstr(0, 2, 'ARROWS: Move up/down  ENTER/SPACE: Enter menu  ESC: Exit menu  Q: Quit')
 
     win = curses.newwin(size_y, size_x, pos_y, pos_x)
 
     win.border()
     win.attron(curses.A_BOLD)
 
-    win.addstr(0, int(size_x / 2 - len(title) / 2), title)
+    # win.addstr(0, int(size_x / 2 - len(title) / 2), title)
 
     while True:
         for i, mitem in enumerate(menu):
@@ -90,6 +91,10 @@ def draw_selector(screen, title="empty", menu=None, msel=0):
         if ckey == curses.KEY_ENTER or ckey == 10:
             del win
             return msel
+
+        if ckey == ord("q"):
+            clean_curses()
+            quit(0)
 
 
 def open_yaml(yfile):
@@ -128,7 +133,7 @@ def main():
     yamlobj = open_yaml(sys.argv[1])
     stdscr = init_curses()
 
-    draw_selector(stdscr, title="Main menu", menu=get_menulist(yamlobj))
+    draw_selector(stdscr, yamlobj)
 
     clean_curses()
 
