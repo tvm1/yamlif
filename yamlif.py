@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import sys
+import os
 import curses
 import yaml
 
@@ -45,7 +46,6 @@ def clean_curses():
 
 
 def draw_selector(screen, menu_titles, mtitle, msel):
-
     maxy, maxx = screen.getmaxyx()
 
     screen.clear()
@@ -100,6 +100,9 @@ def draw_selector(screen, menu_titles, mtitle, msel):
         if ckey == ord("q") or ckey == ord("Q"):
             clean_curses()
             quit(0)
+
+        if ckey == 27:
+            return -1
 
     win.refresh()
 
@@ -159,6 +162,7 @@ def get_menulist(yamlobj, root=False):
                 menu_ids.append(obj["page"])
                 menu_titles.append(obj["title"])
     else:
+
         mid = 'foo'
         mtitle = 'bar'
         for obj in yamlobj:
@@ -213,6 +217,8 @@ def get_menucontent(obj, objid):
 
 
 def main():
+    os.environ['ESCDELAY'] = '0'
+
     if len(sys.argv) < 2:
         print("Please provide a file!")
         quit(1)
@@ -226,12 +232,14 @@ def main():
 
     while True:
         msel = draw_selector(stdscr, menu_titles, mtitle, msel)
+
         eltype = get_nodetype(yamlobj, menu_ids[msel])
+
         if eltype == 'page':
             draw_popup(stdscr, str("Page view not implemented yet (page id:" + menu_ids[msel] + ")"))
         elif eltype == 'menu':
+            msel=0
             menu_ids, menu_titles, mid, mtitle = get_menulist(get_menucontent(yamlobj, menu_ids[msel]))
-            msel = 0
 
     clean_curses()
 
