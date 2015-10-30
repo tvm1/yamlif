@@ -101,8 +101,9 @@ def draw_selector(screen, yamlobj):
             if eltype == 'page':
                 draw_popup(screen, str("Page view not implemented yet (page id:" + menu_ids[msel] + ")"))
             elif eltype == 'menu':
-                # draw_popup(screen, get_nodecontent(yamlobj, menu_ids[msel]))
-                print(get_nodecontent(yamlobj, menu_ids[msel]))
+                # TODO:
+                # get_menulist(get_nodecontent(yamlobj, menu_ids[msel]))
+                pass
 
             win.border()
             win.refresh()
@@ -191,6 +192,7 @@ def get_nodetype(obj, objid):
                     result = retval
     return result
 
+
 def get_nodecontent(obj, objid):
     result = None
 
@@ -209,8 +211,6 @@ def get_nodecontent(obj, objid):
                 if retval is not None:
                     result = retval
     return result
-
-
 
 
 def main():
