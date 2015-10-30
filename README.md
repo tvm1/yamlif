@@ -25,67 +25,70 @@ See example below.
 
 ``` yaml
 ---
-menu: Welcome to main menu!
-id: main_menu
+---
+menu: main_menu
+title:  Welcome to main menu!
 content:
 
-  - menu: This is first menu!
-    id: first_menu
+  - menu: first_menu
+    title: This is first menu!
     content:
-      - menu: And this is first submenu.
-        id: first_submenu
+      - menu: first_submenu
+        title: And this is first submenu.
         content:
-          - page: This is first page.
-            id: first_page
+          - page: first_page
+            title: This is first page.
             persistence: True
             type: checkbox
             content:
               - label: First option
-                id: foo
+                title: foo
                 status: False
               - label: Second option
-                id: bar
+                title: bar
                 status: True
 
-  - menu: This will be second menu.
+  - menu: second_menu
+    title: This will be second menu.
     content:
-      - page: Second page here.
-        id: second_page
+      - page: second_page
+        title: Second page here.
         persistence: False
         type: radiobutton
         content:
           - item: First button
-            id: foobar
+            title: foobar
             status: True
           - item: Second button
-            id: foobar2
+            title: foobar2
           - item: Third button
-            id: foobar3
+            title: foobar3
 
-  - page: Third page.
-    id: third_page
+  - page: third_page
+    title: Third page.
     persistence: True
     type: textinput
     content:
       - item: Some arbitary value
-        id: foobaz
+        title: foobaz
 
-  - menu: Third menu.
+  - menu: third_menu
+    title: Third menu.
     content:
       - page: Fourth page here.
-        id: fourth_page
+        title: fourth_page
         persistence: True
         type: textarea
         content:
           - item: This is first field
-            id: first_field
+            title: first_field
             length: 20
           - item: Second field
-            id: second_field
+            title: second_field
             length: 15
 
-  - page: The last, fifth page.
-    id: fifth_page
+  - page: fifth_page
+    title: The last, fifth page.
     persistence: False
     type: textdisplay
     content:
@@ -96,4 +99,5 @@ content:
           very
           long
           text.
+
 ```
