@@ -96,14 +96,19 @@ def draw_selector(screen, yamlobj):
             else:
                 msel += 1
 
-        if ckey == curses.KEY_ENTER or ckey == 10:
+        if ckey == curses.KEY_ENTER or ckey == 10 or ckey == ord(" "):
             eltype = get_nodetype(yamlobj, menu_ids[msel])
             if eltype == 'page':
                 draw_popup(screen, str("Page view not implemented yet (page id:" + menu_ids[msel] + ")"))
-            del win
-            return msel
 
-        if ckey == ord("q"):
+            win.border()
+            win.refresh()
+            screen.addstr(0, 2, ' ARROWS: Move up/down | ENTER/SPACE: Enter menu | ESC: Exit menu | Q: Quit ')
+            screen.addstr(maxy - 1, 2, ' Current position: ' + str(''.join(str(e) for e in cur_id)) + ' ')
+            win.attron(curses.A_BOLD)
+            win.addstr(0, int(size_x / 2 - len(mtitle) / 2), mtitle)
+
+        if ckey == ord("q") or ckey == ord("Q"):
             clean_curses()
             quit(0)
 
@@ -205,8 +210,6 @@ def main():
         draw_selector(stdscr, yamlobj)
 
     clean_curses()
-
-    print(yamlobj)
 
 
 if __name__ == '__main__':
