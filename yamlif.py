@@ -100,6 +100,10 @@ def draw_selector(screen, yamlobj):
             eltype = get_nodetype(yamlobj, menu_ids[msel])
             if eltype == 'page':
                 draw_popup(screen, str("Page view not implemented yet (page id:" + menu_ids[msel] + ")"))
+            elif eltype =='menu':
+                draw_popup(screen, str("This is menu (page id:" + menu_ids[msel] + ")"))
+
+
 
             win.border()
             win.refresh()
@@ -189,14 +193,6 @@ def get_nodetype(obj, id):
                 if retval is not None:
                     result = retval
     return result
-
-
-def traverse(obj):
-    if isinstance(obj, dict):
-        return {k: traverse(v) for k, v in obj.items()}
-    elif isinstance(obj, list):
-        return [traverse(elem) for elem in obj]
-
 
 def main():
     if len(sys.argv) < 2:
