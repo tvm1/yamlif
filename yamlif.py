@@ -100,10 +100,9 @@ def draw_selector(screen, yamlobj):
             eltype = get_nodetype(yamlobj, menu_ids[msel])
             if eltype == 'page':
                 draw_popup(screen, str("Page view not implemented yet (page id:" + menu_ids[msel] + ")"))
-            elif eltype =='menu':
-                draw_popup(screen, str("This is menu (page id:" + menu_ids[msel] + ")"))
-
-
+            elif eltype == 'menu':
+                # draw_popup(screen, get_nodecontent(yamlobj, menu_ids[msel]))
+                print(get_nodecontent(yamlobj, menu_ids[msel]))
 
             win.border()
             win.refresh()
@@ -173,26 +172,46 @@ def get_menulist(yamlobj):
     return menu_ids, menu_titles, mid, mtitle
 
 
-def get_nodetype(obj, id):
+def get_nodetype(obj, objid):
     result = None
 
     if isinstance(obj, dict):
         for key, val in obj.items():
-            if val == id:
+            if val == objid:
                 result = key
             elif isinstance(val, list) or isinstance(val, dict):
-                retval = get_nodetype(val, id)
+                retval = get_nodetype(val, objid)
                 if retval is not None:
                     result = retval
     elif isinstance(obj, list):
         for elem in obj:
-            if elem == id:
-                result = elem
             if isinstance(elem, list) or isinstance(elem, dict):
-                retval = get_nodetype(elem, id)
+                retval = get_nodetype(elem, objid)
                 if retval is not None:
                     result = retval
     return result
+
+def get_nodecontent(obj, objid):
+    result = None
+
+    if isinstance(obj, dict):
+        for key, val in obj.items():
+            if val == objid:
+                result = obj['content']
+            elif isinstance(val, list) or isinstance(val, dict):
+                retval = get_nodecontent(val, objid)
+                if retval is not None:
+                    result = retval
+    elif isinstance(obj, list):
+        for elem in obj:
+            if isinstance(elem, list) or isinstance(elem, dict):
+                retval = get_nodecontent(elem, objid)
+                if retval is not None:
+                    result = retval
+    return result
+
+
+
 
 def main():
     if len(sys.argv) < 2:
