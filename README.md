@@ -25,14 +25,14 @@ See example below.
 
 ``` yaml
 ---
----
 menu: main_menu
-title:  Welcome to main menu!
+title: Welcome to main menu!
 content:
 
   - menu: first_menu
     title: This is first menu!
     content:
+
       - menu: first_submenu
         title: And this is first submenu.
         content:
@@ -46,6 +46,21 @@ content:
                 status: False
               - label: Second option
                 title: bar
+                status: True
+
+      - menu: second_submenu
+        title: And this is second submenu.
+        content:
+          - page: sixth_page
+            title: This is sixth page.
+            persistence: False
+            type: checkbox
+            content:
+              - label: First option
+                title: foobaz
+                status: False
+              - label: Second option
+                title: foobar
                 status: True
 
   - menu: second_menu
@@ -99,5 +114,4 @@ content:
           very
           long
           text.
-
 ```

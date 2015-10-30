@@ -6,6 +6,7 @@ content:
   - menu: first_menu
     title: This is first menu!
     content:
+
       - menu: first_submenu
         title: And this is first submenu.
         content:
@@ -20,6 +21,7 @@ content:
               - label: Second option
                 title: bar
                 status: True
+
       - menu: second_submenu
         title: And this is second submenu.
         content:
