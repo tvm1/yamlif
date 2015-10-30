@@ -20,6 +20,20 @@ content:
               - label: Second option
                 title: bar
                 status: True
+      - menu: second_submenu
+        title: And this is second submenu.
+        content:
+          - page: sixth_page
+            title: This is sixth page.
+            persistence: False
+            type: checkbox
+            content:
+              - label: First option
+                title: foobaz
+                status: False
+              - label: Second option
+                title: foobar
+                status: True
 
   - menu: second_menu
     title: This will be second menu.
