@@ -97,7 +97,9 @@ def draw_selector(screen, yamlobj):
                 msel += 1
 
         if ckey == curses.KEY_ENTER or ckey == 10:
-            draw_popup(screen, 'Hi!')
+            eltype = get_nodetype(yamlobj, menu_ids[msel])
+            if eltype == 'page':
+                draw_popup(screen, str("Page view not implemented yet (page id:" + menu_ids[msel] + ")"))
             del win
             return msel
 
@@ -162,6 +164,35 @@ def get_menulist(yamlobj):
     return menu_ids, menu_titles, mid, mtitle
 
 
+def get_nodetype(obj, id):
+    result = None
+
+    if isinstance(obj, dict):
+        for key, val in obj.items():
+            if val == id:
+                result = key
+            elif isinstance(val, list) or isinstance(val, dict):
+                retval = get_nodetype(val, id)
+                if retval is not None:
+                    result = retval
+    elif isinstance(obj, list):
+        for elem in obj:
+            if elem == id:
+                result = elem
+            if isinstance(elem, list) or isinstance(elem, dict):
+                retval = get_nodetype(elem, id)
+                if retval is not None:
+                    result = retval
+    return result
+
+
+def traverse(obj):
+    if isinstance(obj, dict):
+        return {k: traverse(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [traverse(elem) for elem in obj]
+
+
 def main():
     if len(sys.argv) < 2:
         print("Please provide a file!")
@@ -174,6 +205,8 @@ def main():
         draw_selector(stdscr, yamlobj)
 
     clean_curses()
+
+    print(yamlobj)
 
 
 if __name__ == '__main__':
