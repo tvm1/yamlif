@@ -102,8 +102,8 @@ def draw_selector(screen, yamlobj):
                 draw_popup(screen, str("Page view not implemented yet (page id:" + menu_ids[msel] + ")"))
             elif eltype == 'menu':
                 # TODO:
-                # get_menulist(get_nodecontent(yamlobj, menu_ids[msel]))
-                # print(get_nodecontent(yamlobj, menu_ids[msel]))
+                get_menulist(get_menucontent(yamlobj, menu_ids[msel]))
+                # print(get_menucontent(yamlobj, menu_ids[msel]))
                 pass
 
             win.border()
@@ -173,15 +173,13 @@ def get_menulist(yamlobj, root=False):
                 menu_ids.append(obj["page"])
                 menu_titles.append(obj["title"])
     else:
-        mid = yamlobj['menu']
-        mtitle = yamlobj['title']
+        mid = 'foo'
+        mtitle = 'bar'
         for obj in yamlobj:
             if 'menu' in obj:
                 menu_ids.append(obj["menu"])
                 menu_titles.append(obj["title"])
-            elif 'page' in obj:
-                menu_ids.append(obj["page"])
-                menu_titles.append(obj["title"])
+
 
     return menu_ids, menu_titles, mid, mtitle
 
@@ -206,7 +204,7 @@ def get_nodetype(obj, objid):
     return result
 
 
-def get_nodecontent(obj, objid):
+def get_menucontent(obj, objid):
     result = None
 
     if isinstance(obj, dict):
@@ -214,13 +212,13 @@ def get_nodecontent(obj, objid):
             if val == objid:
                 result = obj['content']
             elif isinstance(val, list) or isinstance(val, dict):
-                retval = get_nodecontent(val, objid)
+                retval = get_menucontent(val, objid)
                 if retval is not None:
                     result = retval
     elif isinstance(obj, list):
         for elem in obj:
             if isinstance(elem, list) or isinstance(elem, dict):
-                retval = get_nodecontent(elem, objid)
+                retval = get_menucontent(elem, objid)
                 if retval is not None:
                     result = retval
     return result
@@ -234,8 +232,7 @@ def main():
     yamlobj = open_yaml(sys.argv[1])
     stdscr = init_curses()
 
-    while True:
-        draw_selector(stdscr, yamlobj)
+    draw_selector(stdscr, yamlobj)
 
     clean_curses()
 
