@@ -164,6 +164,7 @@ def get_menulist(yamlobj, root=False):
                 menu_titles.append(obj["title"])
     else:
 
+        # TODO: look this up correctly
         mid = 'foo'
         mtitle = 'bar'
         for obj in yamlobj:
@@ -239,8 +240,8 @@ def main():
         if eltype == 'page':
             draw_popup(stdscr, str("Page view not implemented yet (page id:" + menu_ids[msel] + ")"))
         elif eltype == 'menu':
-            msel=0
             menu_ids, menu_titles, mid, mtitle = get_menulist(get_menucontent(yamlobj, menu_ids[msel]))
+            msel=0
 
     clean_curses()
 
