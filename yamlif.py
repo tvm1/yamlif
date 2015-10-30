@@ -44,15 +44,13 @@ def clean_curses():
     curses.endwin()
 
 
-def draw_selector(screen, yamlobj):
+def draw_selector(screen, menu_titles, mtitle, msel):
+
     maxy, maxx = screen.getmaxyx()
 
-    cur_id = []
-
-    menu_ids, menu_titles, mid, mtitle = get_menulist(yamlobj, True)
-    msel = 0
-
-    cur_id.append(mid)
+    screen.clear()
+    screen.border()
+    screen.refresh()
 
     size_y = len(menu_titles) + 2
     size_x = len(max(menu_titles, key=len)) + 2
@@ -64,7 +62,6 @@ def draw_selector(screen, yamlobj):
     pos_x = int(maxx / 2 - size_x / 2)
 
     screen.addstr(0, 2, ' ARROWS: Move up/down | ENTER/SPACE: Enter menu | ESC: Exit menu | Q: Quit ')
-    screen.addstr(maxy - 1, 2, ' Current position: ' + str(''.join(str(e) for e in cur_id)) + ' ')
 
     win = curses.newwin(size_y, size_x, pos_y, pos_x)
 
@@ -97,25 +94,14 @@ def draw_selector(screen, yamlobj):
                 msel += 1
 
         if ckey == curses.KEY_ENTER or ckey == 10 or ckey == ord(" "):
-            eltype = get_nodetype(yamlobj, menu_ids[msel])
-            if eltype == 'page':
-                draw_popup(screen, str("Page view not implemented yet (page id:" + menu_ids[msel] + ")"))
-            elif eltype == 'menu':
-                # TODO:
-                get_menulist(get_menucontent(yamlobj, menu_ids[msel]))
-                # print(get_menucontent(yamlobj, menu_ids[msel]))
-                pass
-
-            win.border()
-            win.refresh()
-            screen.addstr(0, 2, ' ARROWS: Move up/down | ENTER/SPACE: Enter menu | ESC: Exit menu | Q: Quit ')
-            screen.addstr(maxy - 1, 2, ' Current position: ' + str(''.join(str(e) for e in cur_id)) + ' ')
-            win.attron(curses.A_BOLD)
-            win.addstr(0, int(size_x / 2 - len(mtitle) / 2), mtitle)
+            del win
+            return msel
 
         if ckey == ord("q") or ckey == ord("Q"):
             clean_curses()
             quit(0)
+
+    win.refresh()
 
 
 def draw_popup(screen, text='empty'):
@@ -179,7 +165,9 @@ def get_menulist(yamlobj, root=False):
             if 'menu' in obj:
                 menu_ids.append(obj["menu"])
                 menu_titles.append(obj["title"])
-
+            elif 'page' in obj:
+                menu_ids.append(obj["page"])
+                menu_titles.append(obj["title"])
 
     return menu_ids, menu_titles, mid, mtitle
 
@@ -229,10 +217,21 @@ def main():
         print("Please provide a file!")
         quit(1)
 
+    msel = 0
+
     yamlobj = open_yaml(sys.argv[1])
     stdscr = init_curses()
 
-    draw_selector(stdscr, yamlobj)
+    menu_ids, menu_titles, mid, mtitle = get_menulist(yamlobj, True)
+
+    while True:
+        msel = draw_selector(stdscr, menu_titles, mtitle, msel)
+        eltype = get_nodetype(yamlobj, menu_ids[msel])
+        if eltype == 'page':
+            draw_popup(stdscr, str("Page view not implemented yet (page id:" + menu_ids[msel] + ")"))
+        elif eltype == 'menu':
+            menu_ids, menu_titles, mid, mtitle = get_menulist(get_menucontent(yamlobj, menu_ids[msel]))
+            msel = 0
 
     clean_curses()
 
