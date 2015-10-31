@@ -316,7 +316,6 @@ def main():
 
     # main loop that draws menu and allows to traverse & open menu items
     while True:
-        msel = 0
         msel = draw_selector(stdscr, menu_titles, mtitle, msel)
         eltype = get_nodetype(yamlobj, menu_ids[msel])
 
@@ -327,6 +326,8 @@ def main():
             mid = menu_ids[msel]
             mtitle = get_title(yamlobj, mid)
             menu_ids, menu_titles = get_menulist(get_menucontent(yamlobj, menu_ids[msel]))
+            msel = 0
+
 
     # quit
     clean_curses()
