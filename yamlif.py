@@ -7,6 +7,11 @@ import yaml
 
 
 def init_curses():
+    """
+    This function initializes sets up basic curses environment.
+
+    :return: Screen object.
+    """
     stdscr = curses.initscr()
 
     maxy, maxx = stdscr.getmaxyx()
@@ -40,12 +45,26 @@ def init_curses():
 
 
 def clean_curses():
+    """
+    Cleans up curses after quit.
+
+    :return: None
+    """
     curses.curs_set(1)
     curses.nocbreak()
     curses.endwin()
 
 
 def draw_selector(screen, menu_titles, mtitle, msel):
+    """
+    This function draws a menu with given title and handles the keyboard input.
+
+    :param screen: Screen object.
+    :param menu_titles: List of menu titles.
+    :param mtitle: Title of currently active menu
+    :param msel: Starting position of cursor in menu.
+    :return: Index of selected item.
+    """
     maxy, maxx = screen.getmaxyx()
 
     screen.clear()
@@ -70,6 +89,7 @@ def draw_selector(screen, menu_titles, mtitle, msel):
 
     win.addstr(0, int(size_x / 2 - len(mtitle) / 2), mtitle)
 
+    # main loop that handles keyboard input and redrawing
     while True:
         for i, mitem in enumerate(menu_titles):
             mitem = mitem.ljust(size_x - 2)
@@ -109,6 +129,13 @@ def draw_selector(screen, menu_titles, mtitle, msel):
 
 
 def draw_popup(screen, text='empty'):
+    """
+    Generic function that draws a popup window in UI.
+
+    :param screen: Curses screen object.
+    :param text: Text to be displayed
+    :return: None
+    """
     maxy, maxx = screen.getmaxyx()
 
     size_x = len(text) + 2
@@ -132,22 +159,26 @@ def draw_popup(screen, text='empty'):
 
 
 def open_yaml(yfile):
+    """
+    This function opens file with YAML configuration.
+
+    :param yfile: Name of file
+    :return: Python object ( nested lists / dicts )
+    """
     with open(yfile, 'r') as stream:
         yamlobj = yaml.load(stream)
         return yamlobj
 
 
-def print_structure(yamlobj, lvl=0, ):
-    for obj in yamlobj['content']:
-        if 'menu' in obj:
-            print('|' + lvl * ' ' + '\\' + ' ' + obj["menu"])
-            if lvl != -1:
-                print_structure(obj, lvl + 1)
-        elif 'page' in obj:
-            print('|' + lvl * ' ' + '-' + ' ' + obj["page"])
-
-
 def get_menulist(yamlobj, root=False):
+    """
+    This function parses objects returned by get_menucontent() and prepares input for
+    draw_selector().
+
+    :param yamlobj: Python object ( nested list / dicts )
+    :param root: True only if parsing YAML hierarchy from top.
+    :return: menu_ids - list of IDs, menu_titles - list of menu titles, mid & mtitle - id and title of parsed node
+    """
     menu_ids = []
     menu_titles = []
 
@@ -179,6 +210,13 @@ def get_menulist(yamlobj, root=False):
 
 
 def get_nodetype(obj, objid):
+    """
+    Returns key of the object with given ID. (eg., menu, page, etc. )
+
+    :param obj Structure containing YAML object ( nested lists / dictionaries ):
+    :param objid: YAML ID of given object
+    :return: Key of given ID
+    """
     result = None
 
     if isinstance(obj, dict):
@@ -199,6 +237,13 @@ def get_nodetype(obj, objid):
 
 
 def get_menucontent(obj, objid):
+    """
+    Returns list / dictionary structure that is content of given YAML ID.
+
+    :param obj Structure containing YAML object ( nested lists / dictionaries ):
+    :param objid: YAML ID of given object
+    :return: Nested list / dictionary
+    """
     result = None
 
     if isinstance(obj, dict):
@@ -219,31 +264,43 @@ def get_menucontent(obj, objid):
 
 
 def main():
+    """
+    Contains main loop that loads YAML, draws menu and decides what to do with selected items.
+
+    :return: Exit value
+    """
+    # fix the curses ESCAPE key delay
     os.environ['ESCDELAY'] = '0'
 
     if len(sys.argv) < 2:
         print("Please provide a file!")
         quit(1)
 
+    # start with first item selected
     msel = 0
 
+    # open file & set up screen
     yamlobj = open_yaml(sys.argv[1])
     stdscr = init_curses()
 
+    # get content for the first menu
     menu_ids, menu_titles, mid, mtitle = get_menulist(yamlobj, True)
 
+    # main loop that draws menu and allows to traverse & open menu items
     while True:
         msel = draw_selector(stdscr, menu_titles, mtitle, msel)
-
         eltype = get_nodetype(yamlobj, menu_ids[msel])
 
+        # determine what we try to open and act accordingly
         if eltype == 'page':
             draw_popup(stdscr, str("Page view not implemented yet (page id:" + menu_ids[msel] + ")"))
         elif eltype == 'menu':
+            msel = 0
             menu_ids, menu_titles, mid, mtitle = get_menulist(get_menucontent(yamlobj, menu_ids[msel]))
-            msel=0
 
+    # quit
     clean_curses()
+    exit(0)
 
 
 if __name__ == '__main__':
