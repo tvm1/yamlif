@@ -177,14 +177,14 @@ def get_menulist(yamlobj, root=False):
 
     :param yamlobj: Python object ( nested list / dicts )
     :param root: True only if parsing YAML hierarchy from top.
-    :return: menu_ids - list of IDs, menu_titles - list of menu titles, mid & mtitle - id and title of parsed node
+    :return: menu_ids - list of IDs, menu_titles - list of menu titles
     """
     menu_ids = []
     menu_titles = []
 
     if root is True:
-        mid = yamlobj['menu']
-        mtitle = yamlobj['title']
+        # mid = yamlobj['menu']
+        # mtitle = yamlobj['title']
 
         for obj in yamlobj['content']:
             if 'menu' in obj:
@@ -194,10 +194,6 @@ def get_menulist(yamlobj, root=False):
                 menu_ids.append(obj["page"])
                 menu_titles.append(obj["title"])
     else:
-
-        # TODO: look this up correctly
-        mid = 'foo'
-        mtitle = 'bar'
         for obj in yamlobj:
             if 'menu' in obj:
                 menu_ids.append(obj["menu"])
@@ -206,7 +202,7 @@ def get_menulist(yamlobj, root=False):
                 menu_ids.append(obj["page"])
                 menu_titles.append(obj["title"])
 
-    return menu_ids, menu_titles, mid, mtitle
+    return menu_ids, menu_titles
 
 
 def get_nodetype(obj, objid):
@@ -235,6 +231,7 @@ def get_nodetype(obj, objid):
                     result = retval
     return result
 
+
 def get_title(obj, objid):
     """
     Returns title value of the object with given ID.
@@ -243,12 +240,13 @@ def get_title(obj, objid):
     :param objid: YAML ID of given node
     :return: Title of given ID
     """
+
     result = None
 
     if isinstance(obj, dict):
         for key, val in obj.items():
             if val == objid:
-                result = obj.get('title')
+                result = obj['title']
             elif isinstance(val, list) or isinstance(val, dict):
                 retval = get_title(val, objid)
                 if retval is not None:
@@ -309,11 +307,16 @@ def main():
     yamlobj = open_yaml(sys.argv[1])
     stdscr = init_curses()
 
+    # fetch root menu id and title
+    mid = yamlobj['menu']
+    mtitle = yamlobj['title']
+
     # get content for the first menu
-    menu_ids, menu_titles, mid, mtitle = get_menulist(yamlobj, True)
+    menu_ids, menu_titles = get_menulist(yamlobj, True)
 
     # main loop that draws menu and allows to traverse & open menu items
     while True:
+        msel = 0
         msel = draw_selector(stdscr, menu_titles, mtitle, msel)
         eltype = get_nodetype(yamlobj, menu_ids[msel])
 
@@ -321,8 +324,9 @@ def main():
         if eltype == 'page':
             draw_popup(stdscr, str("Page view not implemented yet (page id:" + menu_ids[msel] + ")"))
         elif eltype == 'menu':
-            msel = 0
-            menu_ids, menu_titles, mid, mtitle = get_menulist(get_menucontent(yamlobj, menu_ids[msel]))
+            mid = menu_ids[msel]
+            mtitle = get_title(yamlobj, mid)
+            menu_ids, menu_titles = get_menulist(get_menucontent(yamlobj, menu_ids[msel]))
 
     # quit
     clean_curses()
