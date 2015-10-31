@@ -123,7 +123,6 @@ def draw_selector(screen, menu_titles, mtitle, msel):
 
         if ckey == 27:
             return -1
-            # TODO: implement this
 
     win.refresh()
 
@@ -307,24 +306,30 @@ def main():
     yamlobj = open_yaml(sys.argv[1])
     stdscr = init_curses()
 
+    # top menu defaults
+    mhist = []
+    mid = yamlobj['menu']
+    mtitle = yamlobj['title']
+    mhist.append(mid)
+
     # get content for the first menu
     menu_ids, menu_titles = get_menulist(yamlobj, True)
-    mtitle = yamlobj['title']
 
     # main loop that draws menu and allows to traverse & open menu items
     while True:
+
         msel = draw_selector(stdscr, menu_titles, mtitle, msel)
-        eltype = get_nodetype(yamlobj, menu_ids[msel])
+        mid = menu_ids[msel]
+        eltype = get_nodetype(yamlobj, mid)
 
         # determine what we try to open and act accordingly
         if eltype == 'page':
-            draw_popup(stdscr, str("Page view not implemented yet (page id:" + menu_ids[msel] + ")"))
+            draw_popup(stdscr, str("Page view not implemented yet (page id:" + mid + ")"))
         elif eltype == 'menu':
             mid = menu_ids[msel]
             mtitle = get_title(yamlobj, mid)
-            menu_ids, menu_titles = get_menulist(get_menucontent(yamlobj, menu_ids[msel]))
+            menu_ids, menu_titles = get_menulist(get_menucontent(yamlobj, mid))
             msel = 0
-
 
     # quit
     clean_curses()
