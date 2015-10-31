@@ -3,7 +3,12 @@
 import sys
 import os
 import curses
-import yaml
+
+try:
+    import yaml
+except ImportError:
+    print("This application requires PYYAML module to work correctly. See: http://pyyaml.org")
+    quit(1)
 
 
 def init_curses():
@@ -320,10 +325,14 @@ def main():
 
         msel = draw_selector(stdscr, menu_titles, mtitle, msel)
 
+        # leaving menu and going back to top
         if msel == -1:
-                if len(mhist) > 1:
-                    mhist.pop()
-                    mid = mhist.pop()
+            if len(mhist) > 1:
+                mhist.pop()
+                mid = mhist.pop()
+            else:
+                msel = 0
+                continue
         else:
             mid = menu_ids[msel]
 
