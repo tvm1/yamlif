@@ -319,14 +319,23 @@ def main():
     while True:
 
         msel = draw_selector(stdscr, menu_titles, mtitle, msel)
-        mid = menu_ids[msel]
+
+        if msel == -1:
+                if len(mhist) > 1:
+                    mhist.pop()
+                    mid = mhist.pop()
+        else:
+            mid = menu_ids[msel]
+
         eltype = get_nodetype(yamlobj, mid)
+
+        if eltype == 'menu':
+            mhist.append(mid)
 
         # determine what we try to open and act accordingly
         if eltype == 'page':
             draw_popup(stdscr, str("Page view not implemented yet (page id:" + mid + ")"))
         elif eltype == 'menu':
-            mid = menu_ids[msel]
             mtitle = get_title(yamlobj, mid)
             menu_ids, menu_titles = get_menulist(get_menucontent(yamlobj, mid))
             msel = 0
