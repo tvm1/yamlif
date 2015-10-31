@@ -307,12 +307,9 @@ def main():
     yamlobj = open_yaml(sys.argv[1])
     stdscr = init_curses()
 
-    # fetch root menu id and title
-    mid = yamlobj['menu']
-    mtitle = yamlobj['title']
-
     # get content for the first menu
     menu_ids, menu_titles = get_menulist(yamlobj, True)
+    mtitle = yamlobj['title']
 
     # main loop that draws menu and allows to traverse & open menu items
     while True:
