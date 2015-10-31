@@ -214,7 +214,7 @@ def get_nodetype(obj, objid):
     Returns key of the object with given ID. (eg., menu, page, etc. )
 
     :param obj Structure containing YAML object ( nested lists / dictionaries ):
-    :param objid: YAML ID of given object
+    :param objid: YAML ID of given node
     :return: Key of given ID
     """
     result = None
@@ -235,13 +235,39 @@ def get_nodetype(obj, objid):
                     result = retval
     return result
 
+def get_title(obj, objid):
+    """
+    Returns title value of the object with given ID.
+
+    :param obj Structure containing YAML object ( nested lists / dictionaries ):
+    :param objid: YAML ID of given node
+    :return: Title of given ID
+    """
+    result = None
+
+    if isinstance(obj, dict):
+        for key, val in obj.items():
+            if val == objid:
+                result = obj.get('title')
+            elif isinstance(val, list) or isinstance(val, dict):
+                retval = get_title(val, objid)
+                if retval is not None:
+                    result = retval
+    elif isinstance(obj, list):
+        for elem in obj:
+            if isinstance(elem, list) or isinstance(elem, dict):
+                retval = get_title(elem, objid)
+                if retval is not None:
+                    result = retval
+    return result
+
 
 def get_menucontent(obj, objid):
     """
     Returns list / dictionary structure that is content of given YAML ID.
 
     :param obj Structure containing YAML object ( nested lists / dictionaries ):
-    :param objid: YAML ID of given object
+    :param objid: YAML ID of given node
     :return: Nested list / dictionary
     """
     result = None
