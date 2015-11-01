@@ -13,13 +13,12 @@ content:
           - page: first_page
             title: This is first page.
             persistence: True
-            type: checkbox
             content:
-              - label: First option
-                title: foo
+              - checkbox: my_setting_2
+                title: Test setting 1
                 status: False
-              - label: Second option
-                title: bar
+              - checkbox: my_setting_2
+                title: Test setting 2
                 status: True
 
       - menu: second_submenu
@@ -28,12 +27,11 @@ content:
           - page: sixth_page
             title: This is sixth page.
             persistence: False
-            type: checkbox
             content:
-              - label: First option
-                title: foobaz
+              - radio: First option
+                title: Test option 1
                 status: False
-              - label: Second option
+              - radio: Test Option 2
                 title: foobar
                 status: True
 
@@ -43,23 +41,21 @@ content:
       - page: second_page
         title: Second page here.
         persistence: False
-        type: radiobutton
         content:
-          - item: First button
-            title: foobar
-            status: True
-          - item: Second button
-            title: foobar2
-          - item: Third button
-            title: foobar3
+          - textbox: value_1
+            title: Value 1
+          - textbox: value_2
+            title: Value 2
+          - textbox: value_3
+            title: Value 3
 
   - page: third_page
     title: Third page.
     persistence: True
-    type: textinput
     content:
-      - item: Some arbitary value
-        title: foobaz
+      - checkbox: some_other_value_1
+        title: Check me!
+        status: False
 
   - menu: third_menu
     title: Third menu.
@@ -67,21 +63,19 @@ content:
       - page: fourth_page
         title: Fourth page here.
         persistence: True
-        type: textarea
         content:
-          - item: This is first field
-            title: first_field
+          - textarea: text_area_10
+            title: First text area
             length: 20
-          - item: Second field
-            title: second_field
+          - textarea: text_area_20
+            title: Second text area
             length: 15
 
   - page: fifth_page
     title: The last, fifth page.
     persistence: False
-    type: textdisplay
     content:
-      - item: Warning.
+      - textdisplay: warning_1
         content: >
           This
           is
