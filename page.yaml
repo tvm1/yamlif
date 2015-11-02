@@ -60,6 +60,15 @@ content:
                   turpis ut purus malesuada luctus. Quisque facilisis elit at finibus laoreet. Aenean non condimentum
                   augue. Nulla vehicula imperdiet dolor ac malesuada. Morbi at diam nunc. Cras fermentum vehicula
                   scelerisque.
+              - textbox: value_600
+                value: Value!
+                title: Text value ABC
+              - textbox: value_601
+                value: Some random value, really random.
+                title: Text value DEF
+              - textbox: value_602
+                title: Text value GHI
+                value: 2855
 
       - menu: second_submenu
         title: And this is second submenu.
@@ -73,7 +82,24 @@ content:
                 value: False
               - radio: radio_22
                 title: Test radiobutton 2
+                value: False
+              - radio: radio_32
+                title: Test radiobutton 3
+                value: False
+              - radio: radio_42
+                title: Test radiobutton 4
                 value: True
+              - textdisplay: warning_1
+                title: Warning!
+                content: >
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                  Pellentesque molestie non tellus nec ultrices. Duis quis ipsum vitae urna pellentesque congue.
+                  Phasellus at ipsum iaculis, sollicitudin orci ac, tincidunt augue. Nunc facilisis, odio ut
+                  tincidunt vestibulum, urna lacus pretium velit, quis iaculis magna arcu a arcu. Nunc ullamcorper
+                  turpis ut purus malesuada luctus. Quisque facilisis elit at finibus laoreet. Aenean non condimentum
+                  augue. Nulla vehicula imperdiet dolor ac malesuada. Morbi at diam nunc. Cras fermentum vehicula
+                  scelerisque.
+
 
   - menu: second_menu
     title: This will be second menu.
@@ -87,7 +113,8 @@ content:
           - textbox: value_2
             title: Text value 2
           - textbox: value_3
-            title: Text value 3
+            title: Another random value 3
+            value: I have default value.
 
   - page: third_page
     title: Third page.
@@ -106,10 +133,10 @@ content:
         content:
           - textarea: text_area_10
             title: First text area
-            length: 20
+            content: Values here.
           - textarea: text_area_20
             title: Second text area
-            length: 15
+            content: Values here too.
 
   - page: fifth_page
     title: The last, fifth page.
