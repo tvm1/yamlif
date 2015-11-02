@@ -70,9 +70,13 @@ content:
               - textdisplay: warning_1
                 title: Warning!
                 content: >
-                  This is just experiment.
-                  Be careful.
-                  Thanks!
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                  Pellentesque molestie non tellus nec ultrices. Duis quis ipsum vitae urna pellentesque congue.
+                  Phasellus at ipsum iaculis, sollicitudin orci ac, tincidunt augue. Nunc facilisis, odio ut
+                  tincidunt vestibulum, urna lacus pretium velit, quis iaculis magna arcu a arcu. Nunc ullamcorper
+                  turpis ut purus malesuada luctus. Quisque facilisis elit at finibus laoreet. Aenean non condimentum
+                  augue. Nulla vehicula imperdiet dolor ac malesuada. Morbi at diam nunc. Cras fermentum vehicula
+                  scelerisque.
 
       - menu: second_submenu
         title: And this is second submenu.
@@ -136,3 +140,4 @@ content:
           very
           long
           text.
+```
