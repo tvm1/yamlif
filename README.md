@@ -25,6 +25,7 @@ See example below.
 
 ``` yaml
 ---
+---
 menu: main_menu
 title: Welcome to main menu!
 content:
@@ -40,12 +41,39 @@ content:
             title: This is first page.
             persistence: True
             content:
-              - checkbox: my_setting_2
+              - checkbox: my_setting_1
                 title: Test setting 1
                 status: False
               - checkbox: my_setting_2
                 title: Test setting 2
                 status: True
+              - radio: radio_211
+                title: Test radiobutton 211
+                status: False
+              - radio: radio_222
+                title: Test radiobutton 222
+                status: True
+              - radio: radio_333
+                title: Test radiobutton 333
+                status: False
+              - textbox: value_500
+                title: Text value 500
+              - textbox: value_501
+                title: Text value 501
+              - textbox: value_502
+                title: Text value 502
+              - textarea: text_area_101
+                title: Text area 101
+                length: 20
+              - textarea: text_area_102
+                title: Text area 102
+                length: 15
+              - textdisplay: warning_1
+                content: >
+                  Warning:
+                  This is just experiment.
+                  Be careful.
+                  Thanks!
 
       - menu: second_submenu
         title: And this is second submenu.
@@ -54,11 +82,11 @@ content:
             title: This is sixth page.
             persistence: False
             content:
-              - radio: First option
-                title: Test option 1
+              - radio: radio_11
+                title: Test radiobutton 1
                 status: False
-              - radio: Test Option 2
-                title: foobar
+              - radio: radio_22
+                title: Test radiobutton 2
                 status: True
 
   - menu: second_menu
@@ -69,11 +97,11 @@ content:
         persistence: False
         content:
           - textbox: value_1
-            title: Value 1
+            title: Text value 1
           - textbox: value_2
-            title: Value 2
+            title: Text value 2
           - textbox: value_3
-            title: Value 3
+            title: Text value 3
 
   - page: third_page
     title: Third page.
