@@ -341,7 +341,6 @@ def main():
 
         # determine what we try to open and act accordingly
         if eltype == 'page':
-            foo = get_objectcontent(yamlobj, mid)
             draw_popup(stdscr, str("Page view not implemented yet (page id:" + mid + ")"))
         elif eltype == 'menu':
             mtitle = get_title(yamlobj, mid)
