@@ -42,19 +42,19 @@ content:
             content:
               - checkbox: my_setting_1
                 title: Test setting 1
-                status: False
+                value: False
               - checkbox: my_setting_2
                 title: Test setting 2
-                status: True
+                value: True
               - radio: radio_211
                 title: Test radiobutton 211
-                status: False
+                value: False
               - radio: radio_222
                 title: Test radiobutton 222
-                status: True
+                value: True
               - radio: radio_333
                 title: Test radiobutton 333
-                status: False
+                value: False
               - textbox: value_500
                 title: Text value 500
               - textbox: value_501
@@ -87,10 +87,10 @@ content:
             content:
               - radio: radio_11
                 title: Test radiobutton 1
-                status: False
+                value: False
               - radio: radio_22
                 title: Test radiobutton 2
-                status: True
+                value: True
 
   - menu: second_menu
     title: This will be second menu.
@@ -112,7 +112,7 @@ content:
     content:
       - checkbox: some_other_value_1
         title: Check me!
-        status: False
+        value: False
 
   - menu: third_menu
     title: Third menu.
