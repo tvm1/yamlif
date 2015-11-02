@@ -171,7 +171,21 @@ def draw_page(screen, obj, mid, mtitle):
 
     win.addstr(0, int(size_x / 2 - len(mtitle) / 2), mtitle)
 
-    win.addstr(1, 1, str('test'))
+    for i, elem in enumerate(obj):
+        if 'checkbox' in elem:
+            if elem['status'] is True:
+                win.addstr(i+1, 1, '[X] ' + elem.get('title'))
+            else:
+                win.addstr(i+1, 1, '[ ] ' + elem.get('title'))
+        elif 'radio' in elem:
+            win.addstr(i+1, 1, '( ) ' + elem.get('title'))
+        elif 'textbox' in elem:
+            y_size += 1
+            win.addstr(i+1, 1, elem.get('title') + ': ______________ ')
+        elif 'textarea' in elem:
+            win.addstr(i+1, 1, elem.get('title') + ': ______________ ')
+        elif 'textdisplay' in elem:
+            win.addstr(i+1, 1, elem.get('title'))
 
     win.getch()
     win.attroff(curses.A_BOLD)
