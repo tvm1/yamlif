@@ -172,7 +172,8 @@ def draw_page(screen, obj, mid, mtitle):
             width = len(elem.get('title')) + value_length + 4
             newelem = 'textbox'
         elif 'textarea' in elem:
-            size_y += 1
+            size_y += 5
+            width = int(maxx / 2)
             newelem = 'textarea'
         elif 'textdisplay' in elem:
 
@@ -181,11 +182,13 @@ def draw_page(screen, obj, mid, mtitle):
                 width = int(maxx / 2)
                 wrapped = textwrap.wrap(elem.get('content'), int(maxx / 2) - 2)
 
+                # if it's too long, we will truncate it
                 if len(wrapped) > 4:
                     size_y += 5
                 else:
                     size_y += len(wrapped)
             else:
+                # it's only one line
                 width = len(elem.get('content')) + 2
                 size_y += 1
 
@@ -233,7 +236,7 @@ def draw_page(screen, obj, mid, mtitle):
             newelem = 'textbox'
 
             if elem.get('value') is None:
-                value = ((size_x - 4) - len(elem.get('title'))) * '_'
+                value = ''
             else:
                 value = str(elem.get('value'))
 
@@ -241,7 +244,29 @@ def draw_page(screen, obj, mid, mtitle):
 
         elif 'textarea' in elem:
             newelem = 'textarea'
-            win.addstr(i + offset, 1, elem.get('title') + ': ______________ ')
+
+            # check if there's value at all, otherwise leave space blank
+            if (elem.get('content')) is False:
+                offset += 5
+                break
+            else:
+                textlist = textwrap.wrap(elem.get('content'), size_x - 2 - len(elem.get('title')))
+
+            # print content of the textarea
+            for j, ln in enumerate(textlist):
+
+                # if it's too many lines, truncate
+                if j == 4 and len(textlist) > 4:
+                    ln = re.sub('.............$', '... [wrapped]', ln)
+                    win.addstr(i + offset, 1 + len(elem.get('title')) + 2, str(ln))
+                    break
+
+                if j == 0:
+                    win.addstr(i + offset, 1, str(elem.get('title')) + ": " + str(ln))
+                    offset += 1
+                else:
+                    win.addstr(i + offset, 1 + len(elem.get('title')) + 2, str(ln))
+                    offset += 1
 
         elif 'textdisplay' in elem:
             newelem = 'textdisplay'
@@ -249,11 +274,12 @@ def draw_page(screen, obj, mid, mtitle):
             # wrapping is handled here
             textlist = textwrap.wrap(elem.get('content'), size_x - 2)
 
+            # print whatever is in content of textdisplay
             for j, ln in enumerate(textlist):
 
                 # if it's too many lines, truncate
                 if j == 4 and len(textlist) > 4:
-                    ln = re.sub('.............$','... [wrapped]',ln)
+                    ln = re.sub('.............$', '... [wrapped]', ln)
                     win.addstr(i + offset, 1, str(ln))
                     offset += 1
                     break
