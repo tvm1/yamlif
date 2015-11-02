@@ -224,7 +224,7 @@ def draw_page(screen, obj, mid, mtitle, msel):
 
         # color for currently selected item
         if i == msel:
-            cl = curses.color_pair(2)
+            cl = curses.color_pair(1)
         else:
             cl = curses.color_pair(0)
 
@@ -543,7 +543,6 @@ def main():
             psel = 0
             while psel != -1:
                 psel = draw_page(stdscr, get_objectcontent(yamlobj, mid), mid, get_title(yamlobj, mid), psel)
-                print(psel)
         elif eltype == 'menu':
             mtitle = get_title(yamlobj, mid)
             menu_ids, menu_titles = get_menulist(get_objectcontent(yamlobj, mid))
