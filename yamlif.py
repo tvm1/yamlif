@@ -82,7 +82,7 @@ def draw_selector(screen, menu_titles, mtitle, msel):
     if size_x < len(mtitle) + 2:
         size_x = len(mtitle) + 2
 
-    pos_y = int(maxy / 2 - size_y / 2)
+    pos_y = int(maxy / 2 - size_y / 2 - 2)
     pos_x = int(maxx / 2 - size_x / 2)
 
     screen.addstr(0, 2, ' ARROWS: Move up/down | ENTER/SPACE: Enter menu | ESC: Exit menu | Q: Quit ')
@@ -161,7 +161,7 @@ def draw_page(screen, obj, mid, mtitle):
             y_size += 1
 
     size_x = int(maxx / 2)
-    pos_y = int(maxy / 2 - 3)
+    pos_y = int(maxy / 2 - 4)
     pos_x = int(maxx / 2 - size_x / 2)
 
     win = curses.newwin(y_size, size_x, pos_y, pos_x)
@@ -178,7 +178,10 @@ def draw_page(screen, obj, mid, mtitle):
             else:
                 win.addstr(i+1, 1, '[ ] ' + elem.get('title'))
         elif 'radio' in elem:
-            win.addstr(i+1, 1, '( ) ' + elem.get('title'))
+            if elem['status'] is True:
+                win.addstr(i+1, 1, '(X) ' + elem.get('title'))
+            else:
+                win.addstr(i+1, 1, '( ) ' + elem.get('title'))
         elif 'textbox' in elem:
             y_size += 1
             win.addstr(i+1, 1, elem.get('title') + ': ______________ ')
@@ -404,8 +407,7 @@ def main():
 
         # determine what we try to open and act accordingly
         if eltype == 'page':
-            mtitle = get_title(yamlobj, mid)
-            draw_page(stdscr, get_objectcontent(yamlobj, mid), mid, mtitle)
+            draw_page(stdscr, get_objectcontent(yamlobj, mid), mid, get_title(yamlobj, mid))
         elif eltype == 'menu':
             mtitle = get_title(yamlobj, mid)
             menu_ids, menu_titles = get_menulist(get_objectcontent(yamlobj, mid))
