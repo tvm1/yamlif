@@ -134,7 +134,7 @@ def draw_selector(screen, menu_titles, mtitle, msel):
     win.refresh()
 
 
-def draw_page(screen, obj, mid, mtitle):
+def draw_page(screen, obj, mid, mtitle, msel=0):
     """
     This functions draws page and it's content.
 
@@ -218,19 +218,25 @@ def draw_page(screen, obj, mid, mtitle):
     # main loop that draws page
     for i, elem in enumerate(obj):
 
+        # color for currently selected item
+        if i == msel:
+            cl = curses.color_pair(2)
+        else:
+            cl = curses.color_pair(0)
+
         if 'checkbox' in elem:
             newelem = 'checkbox'
             if elem['value'] is True:
-                win.addstr(i + offset, 1, '[*] ' + elem.get('title'))
+                win.addstr(i + offset, 1, '[*] ' + elem.get('title'), cl)
             else:
-                win.addstr(i + offset, 1, '[ ] ' + elem.get('title'))
+                win.addstr(i + offset, 1, '[ ] ' + elem.get('title'), cl)
 
         elif 'radio' in elem:
             newelem = 'radio'
             if elem['value'] is True:
-                win.addstr(i + offset, 1, '(*) ' + elem.get('title'))
+                win.addstr(i + offset, 1, '(*) ' + elem.get('title'), cl)
             else:
-                win.addstr(i + offset, 1, '( ) ' + elem.get('title'))
+                win.addstr(i + offset, 1, '( ) ' + elem.get('title'), cl)
 
         elif 'textbox' in elem:
             newelem = 'textbox'
@@ -240,14 +246,14 @@ def draw_page(screen, obj, mid, mtitle):
             else:
                 value = str(elem.get('value'))
 
-            win.addstr(i + offset, 1, elem.get('title') + ": " + value)
+            win.addstr(i + offset, 1, elem.get('title') + ": " + value, cl)
 
         elif 'textarea' in elem:
             newelem = 'textarea'
 
             # check if there's value at all, otherwise leave space blank
             if 'content' not in elem:
-                win.addstr(i + offset, 1, str(elem.get('title')) + ": ")
+                win.addstr(i + offset, 1, str(elem.get('title')) + ": ", cl)
                 offset += 5
                 break
             else:
@@ -259,14 +265,14 @@ def draw_page(screen, obj, mid, mtitle):
                 # if it's too many lines, truncate
                 if j == 4 and len(textlist) > 4:
                     ln = re.sub('.............$', '... [wrapped]', ln)
-                    win.addstr(i + offset, 1 + len(elem.get('title')) + 2, str(ln))
+                    win.addstr(i + offset, 1 + len(elem.get('title')) + 2, str(ln), cl)
                     break
 
                 if j == 0:
-                    win.addstr(i + offset, 1, str(elem.get('title')) + ": " + str(ln))
+                    win.addstr(i + offset, 1, str(elem.get('title')) + ": " + str(ln), cl)
                     offset += 1
                 else:
-                    win.addstr(i + offset, 1 + len(elem.get('title')) + 2, str(ln))
+                    win.addstr(i + offset, 1 + len(elem.get('title')) + 2, str(ln), cl)
                     offset += 1
 
         elif 'textdisplay' in elem:
@@ -281,10 +287,10 @@ def draw_page(screen, obj, mid, mtitle):
                 # if it's too many lines, truncate
                 if j == 4 and len(textlist) > 4:
                     ln = re.sub('.............$', '... [wrapped]', ln)
-                    win.addstr(i + offset, 1, str(ln))
+                    win.addstr(i + offset, 1, str(ln), cl)
                     break
 
-                win.addstr(i + offset, 1, str(ln))
+                win.addstr(i + offset, 1, str(ln), cl)
                 offset += 1
 
         # element has changed, add blank line
@@ -292,8 +298,9 @@ def draw_page(screen, obj, mid, mtitle):
             if newelem not in obj[i + 1]:
                 offset += 1
 
-    win.getch()
     win.attroff(curses.A_BOLD)
+    win.getch()
+    win.refresh()
 
     del win
     screen.touchwin()
