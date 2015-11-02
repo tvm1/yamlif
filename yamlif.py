@@ -138,16 +138,33 @@ def draw_page(screen, obj, mid, mtitle):
 
     :param screen: Curses screen object.
     :param obj: Python object ( nested list / dicts )
+    :param mid: Page id
+    :param mtitle: Page title
     :return: None
     """
 
     maxy, maxx = screen.getmaxyx()
 
+    y_size = 2
+
+    # calculate page height
+    for elem in obj:
+        if 'checkbox' in elem:
+            y_size += 1
+        elif 'radio' in elem:
+            y_size += 1
+        elif 'textbox' in elem:
+            y_size += 1
+        elif 'textarea' in elem:
+            y_size += 1
+        elif 'textdisplay' in elem:
+            y_size += 1
+
     size_x = int(maxx / 2)
     pos_y = int(maxy / 2 - 3)
     pos_x = int(maxx / 2 - size_x / 2)
 
-    win = curses.newwin(3, size_x, pos_y, pos_x)
+    win = curses.newwin(y_size, size_x, pos_y, pos_x)
 
     win.border()
     win.attron(curses.A_BOLD)
