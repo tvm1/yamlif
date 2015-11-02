@@ -133,8 +133,12 @@ def draw_selector(screen, menu_titles, mtitle, msel):
 
     win.refresh()
 
+    del win
+    screen.touchwin()
+    screen.refresh()
 
-def draw_page(screen, obj, mid, mtitle, msel=0):
+
+def draw_page(screen, obj, mid, mtitle, msel):
     """
     This functions draws page and it's content.
 
@@ -299,12 +303,38 @@ def draw_page(screen, obj, mid, mtitle, msel=0):
                 offset += 1
 
     win.attroff(curses.A_BOLD)
-    win.getch()
     win.refresh()
+
+    ckey = screen.getch()
+
+    if ckey == curses.KEY_UP:
+        if msel == 0:
+            msel = len(obj) - 1
+        else:
+            msel -= 1
+    elif ckey == curses.KEY_DOWN:
+
+        if msel  == len(obj) - 1:
+            msel = 0
+        else:
+            msel += 1
+
+    elif ckey == curses.KEY_ENTER or ckey == 10 or ckey == ord(" "):
+        draw_popup(screen, 'text')
+
+    elif ckey == ord("q") or ckey == ord("Q"):
+        clean_curses()
+        quit(0)
+
+    elif ckey == 27 or ckey == curses.KEY_BACKSPACE:
+        msel = -1
+
 
     del win
     screen.touchwin()
     screen.refresh()
+
+    return msel
 
 
 def draw_popup(screen, text='empty'):
@@ -516,7 +546,10 @@ def main():
 
         # determine what we try to open and act accordingly
         if eltype == 'page':
-            draw_page(stdscr, get_objectcontent(yamlobj, mid), mid, get_title(yamlobj, mid))
+            psel = 0
+            while psel != -1:
+                psel = draw_page(stdscr, get_objectcontent(yamlobj, mid), mid, get_title(yamlobj, mid), psel)
+                print(psel)
         elif eltype == 'menu':
             mtitle = get_title(yamlobj, mid)
             menu_ids, menu_titles = get_menulist(get_objectcontent(yamlobj, mid))
