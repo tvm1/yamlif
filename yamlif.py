@@ -146,11 +146,10 @@ def draw_page(screen, obj, mid, mtitle):
     maxy, maxx = screen.getmaxyx()
 
     size_y = 2
-    lastelem = None
     newelem = None
 
     # calculate page height
-    for elem in obj:
+    for i, elem in enumerate(obj):
 
         if 'checkbox' in elem:
             size_y += 1
@@ -168,10 +167,12 @@ def draw_page(screen, obj, mid, mtitle):
             size_y += 1
             newelem = 'textdisplay'
 
-        if lastelem != newelem:
-            size_y += 1
+        # element has changed, make neat space
+        if elem != obj[-1]:
+            if newelem not in obj[i+1]:
+                size_y += 1
 
-        lastelem = newelem
+    # calculate page width
 
     size_x = int(maxx / 2)
     pos_y = int(maxy / 2 - 4)
@@ -184,25 +185,43 @@ def draw_page(screen, obj, mid, mtitle):
 
     win.addstr(0, int(size_x / 2 - len(mtitle) / 2), mtitle)
 
+    newelem = None
+    offset = 1
+
+    # main loop that draws page
     for i, elem in enumerate(obj):
-        i += 1
+
         if 'checkbox' in elem:
+            newelem = 'checkbox'
             if elem['status'] is True:
-                win.addstr(i, 1, '[X] ' + elem.get('title'))
+                win.addstr(i + offset, 1, '[*] ' + elem.get('title'))
             else:
-                win.addstr(i, 1, '[ ] ' + elem.get('title'))
+                win.addstr(i + offset, 1, '[ ] ' + elem.get('title'))
+
         elif 'radio' in elem:
+            newelem = 'radio'
             if elem['status'] is True:
-                win.addstr(i, 1, '(X) ' + elem.get('title'))
+                win.addstr(i + offset, 1, '(*) ' + elem.get('title'))
             else:
-                win.addstr(i, 1, '( ) ' + elem.get('title'))
+                win.addstr(i + offset, 1, '( ) ' + elem.get('title'))
+
         elif 'textbox' in elem:
+            newelem = 'textbox'
             size_y += 1
-            win.addstr(i, 1, elem.get('title') + ': ______________ ')
+            win.addstr(i + offset, 1, elem.get('title') + ': ______________ ')
+
         elif 'textarea' in elem:
-            win.addstr(i, 1, elem.get('title') + ': ______________ ')
+            newelem = 'textarea'
+            win.addstr(i + offset, 1, elem.get('title') + ': ______________ ')
+
         elif 'textdisplay' in elem:
-            win.addstr(i, 1, str(elem.get('title')).strip())
+            newelem = 'textdisplay'
+            win.addstr(i + offset, 1, str(elem.get('title')).strip())
+
+        # element has changed, make neat space
+        if elem != obj[-1]:
+            if newelem not in obj[i+1]:
+                offset += 1
 
     win.getch()
     win.attroff(curses.A_BOLD)
