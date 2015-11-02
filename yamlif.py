@@ -246,7 +246,8 @@ def draw_page(screen, obj, mid, mtitle):
             newelem = 'textarea'
 
             # check if there's value at all, otherwise leave space blank
-            if (elem.get('content')) is False:
+            if 'content' not in elem:
+                win.addstr(i + offset, 1, str(elem.get('title')) + ": ")
                 offset += 5
                 break
             else:
@@ -281,7 +282,6 @@ def draw_page(screen, obj, mid, mtitle):
                 if j == 4 and len(textlist) > 4:
                     ln = re.sub('.............$', '... [wrapped]', ln)
                     win.addstr(i + offset, 1, str(ln))
-                    offset += 1
                     break
 
                 win.addstr(i + offset, 1, str(ln))
