@@ -228,20 +228,19 @@ def draw_page(screen, obj, mid, mtitle, msel):
         else:
             cl = curses.color_pair(0)
 
+        # this actually draws what is visible
         if 'checkbox' in elem:
             newelem = 'checkbox'
             if elem['value'] is True:
                 win.addstr(i + offset, 1, '[*] ' + elem.get('title'), cl)
             else:
                 win.addstr(i + offset, 1, '[ ] ' + elem.get('title'), cl)
-
         elif 'radio' in elem:
             newelem = 'radio'
             if elem['value'] is True:
                 win.addstr(i + offset, 1, '(*) ' + elem.get('title'), cl)
             else:
                 win.addstr(i + offset, 1, '( ) ' + elem.get('title'), cl)
-
         elif 'textbox' in elem:
             newelem = 'textbox'
 
@@ -251,7 +250,6 @@ def draw_page(screen, obj, mid, mtitle, msel):
                 value = str(elem.get('value'))
 
             win.addstr(i + offset, 1, elem.get('title') + ": " + value, cl)
-
         elif 'textarea' in elem:
             newelem = 'textarea'
 
@@ -314,21 +312,17 @@ def draw_page(screen, obj, mid, mtitle, msel):
             msel -= 1
     elif ckey == curses.KEY_DOWN:
 
-        if msel  == len(obj) - 1:
+        if msel == len(obj) - 1:
             msel = 0
         else:
             msel += 1
-
     elif ckey == curses.KEY_ENTER or ckey == 10 or ckey == ord(" "):
         draw_popup(screen, 'text')
-
     elif ckey == ord("q") or ckey == ord("Q"):
         clean_curses()
         quit(0)
-
     elif ckey == 27 or ckey == curses.KEY_BACKSPACE:
         msel = -1
-
 
     del win
     screen.touchwin()
