@@ -132,6 +132,40 @@ def draw_selector(screen, menu_titles, mtitle, msel):
     win.refresh()
 
 
+def draw_page(screen, obj, pid):
+    """
+    This functions draws page and it's content.
+
+    :param screen: Curses screen object.
+    :param obj: Python object ( nested list / dicts )
+    :return: None
+    """
+
+    maxy, maxx = screen.getmaxyx()
+
+    size_x = int(maxx / 2)
+    pos_y = int(maxy / 2 - 3)
+    pos_x = int(maxx / 2 - size_x / 2)
+    mtitle = get_title(obj, pid)
+
+    win = curses.newwin(3, size_x, pos_y, pos_x)
+
+    win.border()
+    win.attron(curses.A_BOLD)
+
+
+    win.addstr(0, int(size_x / 2 - len(mtitle) / 2), mtitle)
+
+    win.addstr(1, 1, str('test'))
+
+    win.getch()
+    win.attroff(curses.A_BOLD)
+
+    del win
+    screen.touchwin()
+    screen.refresh()
+
+
 def draw_popup(screen, text='empty'):
     """
     Generic function that draws a popup window in UI.
@@ -341,7 +375,8 @@ def main():
 
         # determine what we try to open and act accordingly
         if eltype == 'page':
-            draw_popup(stdscr, str("Page view not implemented yet (page id:" + mid + ")"))
+            # draw_popup(stdscr, str("Page view not implemented yet (page id:" + mid + ")"))
+            draw_page(stdscr, yamlobj, mid)
         elif eltype == 'menu':
             mtitle = get_title(yamlobj, mid)
             menu_ids, menu_titles = get_menulist(get_objectcontent(yamlobj, mid))
