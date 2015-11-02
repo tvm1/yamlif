@@ -126,7 +126,7 @@ def draw_selector(screen, menu_titles, mtitle, msel):
             clean_curses()
             quit(0)
 
-        if ckey == 27:
+        if ckey == 27 or ckey == curses.KEY_BACKSPACE:
             return -1
 
     win.refresh()
@@ -146,19 +146,28 @@ def draw_page(screen, obj, mid, mtitle):
     maxy, maxx = screen.getmaxyx()
 
     size_y = 2
+    size_x = len(mtitle)
     newelem = None
 
-    # calculate page height
+    # calculate page height and width
     for i, elem in enumerate(obj):
+
+        if elem.get('value') is None:
+            value_length = 0
+        else:
+            value_length = len(str(elem.get('value')))
 
         if 'checkbox' in elem:
             size_y += 1
+            width = len(elem.get('title')) + 6
             newelem = 'checkbox'
         elif 'radio' in elem:
             size_y += 1
+            width = len(elem.get('title')) + 6
             newelem = 'radio'
         elif 'textbox' in elem:
             size_y += 1
+            width = len(elem.get('title')) + value_length + 4
             newelem = 'textbox'
         elif 'textarea' in elem:
             size_y += 1
@@ -167,15 +176,15 @@ def draw_page(screen, obj, mid, mtitle):
             size_y += 1
             newelem = 'textdisplay'
 
-        # element has changed, make neat space
+        # element has changed, add blank line
         if elem != obj[-1]:
-            if newelem not in obj[i+1]:
+            if newelem not in obj[i + 1]:
                 size_y += 1
 
-    # calculate page width
+        if width > size_x:
+            size_x = width
 
-    size_x = int(maxx / 2)
-    pos_y = int(maxy / 2 - 4)
+    pos_y = int(maxy / 2 - int(size_y / 2))
     pos_x = int(maxx / 2 - size_x / 2)
 
     win = curses.newwin(size_y, size_x, pos_y, pos_x)
@@ -193,22 +202,27 @@ def draw_page(screen, obj, mid, mtitle):
 
         if 'checkbox' in elem:
             newelem = 'checkbox'
-            if elem['status'] is True:
+            if elem['value'] is True:
                 win.addstr(i + offset, 1, '[*] ' + elem.get('title'))
             else:
                 win.addstr(i + offset, 1, '[ ] ' + elem.get('title'))
 
         elif 'radio' in elem:
             newelem = 'radio'
-            if elem['status'] is True:
+            if elem['value'] is True:
                 win.addstr(i + offset, 1, '(*) ' + elem.get('title'))
             else:
                 win.addstr(i + offset, 1, '( ) ' + elem.get('title'))
 
         elif 'textbox' in elem:
             newelem = 'textbox'
-            size_y += 1
-            win.addstr(i + offset, 1, elem.get('title') + ': ______________ ')
+
+            if elem.get('value') is None:
+                value = (( size_x - 4 ) - len(elem.get('title'))) * '_'
+            else:
+                value = str(elem.get('value'))
+
+            win.addstr(i + offset, 1, elem.get('title') + ": " + value)
 
         elif 'textarea' in elem:
             newelem = 'textarea'
@@ -220,7 +234,7 @@ def draw_page(screen, obj, mid, mtitle):
 
         # element has changed, make neat space
         if elem != obj[-1]:
-            if newelem not in obj[i+1]:
+            if newelem not in obj[i + 1]:
                 offset += 1
 
     win.getch()
