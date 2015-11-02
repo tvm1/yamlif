@@ -262,7 +262,7 @@ def get_title(obj, objid):
     return result
 
 
-def get_menucontent(obj, objid):
+def get_objectcontent(obj, objid):
     """
     Returns list / dictionary structure that is content of given YAML ID.
 
@@ -277,13 +277,13 @@ def get_menucontent(obj, objid):
             if val == objid:
                 result = obj['content']
             elif isinstance(val, list) or isinstance(val, dict):
-                retval = get_menucontent(val, objid)
+                retval = get_objectcontent(val, objid)
                 if retval is not None:
                     result = retval
     elif isinstance(obj, list):
         for elem in obj:
             if isinstance(elem, list) or isinstance(elem, dict):
-                retval = get_menucontent(elem, objid)
+                retval = get_objectcontent(elem, objid)
                 if retval is not None:
                     result = retval
     return result
@@ -341,10 +341,11 @@ def main():
 
         # determine what we try to open and act accordingly
         if eltype == 'page':
+            foo = get_objectcontent(yamlobj, mid)
             draw_popup(stdscr, str("Page view not implemented yet (page id:" + mid + ")"))
         elif eltype == 'menu':
             mtitle = get_title(yamlobj, mid)
-            menu_ids, menu_titles = get_menulist(get_menucontent(yamlobj, mid))
+            menu_ids, menu_titles = get_menulist(get_objectcontent(yamlobj, mid))
             msel = 0
 
     # quit
