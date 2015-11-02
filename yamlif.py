@@ -146,7 +146,7 @@ def draw_page(screen, obj, mid, mtitle):
     maxy, maxx = screen.getmaxyx()
 
     size_y = 2
-    size_x = len(mtitle)
+    size_x = len(mtitle) + 2
     newelem = None
 
     # calculate page height and width
