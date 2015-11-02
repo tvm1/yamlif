@@ -3,6 +3,8 @@
 import sys
 import os
 import curses
+import textwrap
+import re
 
 try:
     import yaml
@@ -173,7 +175,20 @@ def draw_page(screen, obj, mid, mtitle):
             size_y += 1
             newelem = 'textarea'
         elif 'textdisplay' in elem:
-            size_y += 1
+
+            # wrapping is handled here
+            if len(elem.get('content')) > int(maxx / 2):
+                width = int(maxx / 2)
+                wrapped = textwrap.wrap(elem.get('content'), int(maxx / 2) - 2)
+
+                if len(wrapped) > 4:
+                    size_y += 5
+                else:
+                    size_y += len(wrapped)
+            else:
+                width = len(elem.get('content')) + 2
+                size_y += 1
+
             newelem = 'textdisplay'
 
         # element has changed, add blank line
@@ -218,7 +233,7 @@ def draw_page(screen, obj, mid, mtitle):
             newelem = 'textbox'
 
             if elem.get('value') is None:
-                value = (( size_x - 4 ) - len(elem.get('title'))) * '_'
+                value = ((size_x - 4) - len(elem.get('title'))) * '_'
             else:
                 value = str(elem.get('value'))
 
@@ -230,9 +245,23 @@ def draw_page(screen, obj, mid, mtitle):
 
         elif 'textdisplay' in elem:
             newelem = 'textdisplay'
-            win.addstr(i + offset, 1, str(elem.get('title')).strip())
 
-        # element has changed, make neat space
+            # wrapping is handled here
+            textlist = textwrap.wrap(elem.get('content'), size_x - 2)
+
+            for j, ln in enumerate(textlist):
+
+                # if it's too many lines, truncate
+                if j == 4 and len(textlist) > 4:
+                    ln = re.sub('.............$','... [wrapped]',ln)
+                    win.addstr(i + offset, 1, str(ln))
+                    offset += 1
+                    break
+
+                win.addstr(i + offset, 1, str(ln))
+                offset += 1
+
+        # element has changed, add blank line
         if elem != obj[-1]:
             if newelem not in obj[i + 1]:
                 offset += 1
