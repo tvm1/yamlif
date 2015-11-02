@@ -82,7 +82,7 @@ def draw_selector(screen, menu_titles, mtitle, msel):
     if size_x < len(mtitle) + 2:
         size_x = len(mtitle) + 2
 
-    pos_y = int(maxy / 2 - size_y / 2 - 2)
+    pos_y = int(maxy / 2 - size_y / 2 - 1)
     pos_x = int(maxx / 2 - size_x / 2)
 
     screen.addstr(0, 2, ' ARROWS: Move up/down | ENTER/SPACE: Enter menu | ESC: Exit menu | Q: Quit ')
