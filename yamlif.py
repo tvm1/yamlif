@@ -149,6 +149,9 @@ def draw_page(screen, obj, mid, mtitle, msel):
     :return: None
     """
 
+    screen.touchwin()
+    screen.refresh()
+
     maxy, maxx = screen.getmaxyx()
 
     size_y = 2
@@ -310,17 +313,20 @@ def draw_page(screen, obj, mid, mtitle, msel):
             msel = len(obj) - 1
         else:
             msel -= 1
-    elif ckey == curses.KEY_DOWN:
 
+    elif ckey == curses.KEY_DOWN:
         if msel == len(obj) - 1:
             msel = 0
         else:
             msel += 1
+
     elif ckey == curses.KEY_ENTER or ckey == 10 or ckey == ord(" "):
         draw_popup(screen, 'text')
+
     elif ckey == ord("q") or ckey == ord("Q"):
         clean_curses()
         quit(0)
+
     elif ckey == 27 or ckey == curses.KEY_BACKSPACE:
         msel = -1
 
