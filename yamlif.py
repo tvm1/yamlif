@@ -13,7 +13,7 @@ except ImportError:
 
 def init_curses():
     """
-    This function initializes sets up basic curses environment.
+    This function sets up basic curses environment.
 
     :return: Screen object.
     """
@@ -187,8 +187,6 @@ def get_menulist(yamlobj, root=False):
     menu_titles = []
 
     if root is True:
-        # mid = yamlobj['menu']
-        # mtitle = yamlobj['title']
 
         for obj in yamlobj['content']:
             if 'menu' in obj:
