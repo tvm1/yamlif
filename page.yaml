@@ -32,9 +32,11 @@ content:
               - textbox: value_500
                 title: Text value 500
               - textbox: value_501
+                value: Some random value
                 title: Text value 501
               - textbox: value_502
                 title: Text value 502
+                value: 28
               - textarea: text_area_101
                 title: Text area 101
                 length: 20
