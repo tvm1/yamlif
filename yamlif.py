@@ -321,7 +321,7 @@ def draw_page(screen, obj, mid, mtitle, msel):
             msel += 1
 
     elif ckey == curses.KEY_ENTER or ckey == 10 or ckey == ord(" "):
-        draw_popup(screen, 'text')
+        draw_popup(screen, 'Nothing yet.')
 
     elif ckey == ord("q") or ckey == ord("Q"):
         clean_curses()
