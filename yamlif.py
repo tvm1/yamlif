@@ -138,15 +138,16 @@ def draw_selector(screen, menu_titles, mtitle, msel):
     screen.refresh()
 
 
-def draw_page(screen, obj, mid, mtitle, msel):
+def draw_page(screen, yamlobj, obj, mtitle, msel):
     """
     This functions draws page and it's content.
 
     :param screen: Curses screen object.
+    :param yamlobj: Whole python object ( nested list / dicts )
     :param obj: Python object ( nested list / dicts )
     :param mid: Page id
     :param mtitle: Page title
-    :return: None
+    :return: Position of currently selected page element
     """
 
     screen.touchwin()
@@ -494,6 +495,18 @@ def get_objectcontent(obj, objid):
     return result
 
 
+def set_value(yamlobj, objid):
+    """
+    Sets value of given YAML object.
+
+    :param yamlobj: Whole python object ( nested list / dicts )
+    :param obidj: YAML object id
+    :return: None
+    """
+
+    get_nodetype(yamlobj, objid)
+
+
 def main():
     """
     Contains main loop that loads YAML, draws menu and decides what to do with selected items.
@@ -548,7 +561,7 @@ def main():
         if eltype == 'page':
             psel = 0
             while psel != -1:
-                psel = draw_page(stdscr, get_objectcontent(yamlobj, mid), mid, get_title(yamlobj, mid), psel)
+                psel = draw_page(stdscr, yamlobj, get_objectcontent(yamlobj, mid), get_title(yamlobj, mid), psel)
         elif eltype == 'menu':
             mtitle = get_title(yamlobj, mid)
             menu_ids, menu_titles = get_menulist(get_objectcontent(yamlobj, mid))
