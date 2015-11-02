@@ -25,7 +25,6 @@ See example below.
 
 ``` yaml
 ---
----
 menu: main_menu
 title: Welcome to main menu!
 content:
@@ -69,8 +68,8 @@ content:
                 title: Text area 102
                 length: 15
               - textdisplay: warning_1
+                title: Warning!
                 content: >
-                  Warning:
                   This is just experiment.
                   Be careful.
                   Thanks!
@@ -130,10 +129,10 @@ content:
     persistence: False
     content:
       - textdisplay: warning_1
+        title: Very long text.
         content: >
           This
           is
           very
           long
           text.
-```
