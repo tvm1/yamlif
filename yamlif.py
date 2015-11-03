@@ -348,17 +348,29 @@ def draw_popup(screen, text='empty'):
     """
     maxy, maxx = screen.getmaxyx()
 
-    size_x = len(text) + 2
+    wrapped = []
 
-    pos_y = int(maxy / 2 - 3)
+    if len(text) > int(maxx / 2):
+        size_x = int(maxx / 2) + 2
+        wrapped = textwrap.wrap(text, int(maxx / 2) - 2)
+        size_y = len(wrapped) + 2
+    else:
+        size_x = len(text) + 2
+        size_y = 3
+
+    pos_y = int(maxy / 2 - int(size_y / 2))
     pos_x = int(maxx / 2 - size_x / 2)
 
-    win = curses.newwin(3, size_x, pos_y, pos_x)
+    win = curses.newwin(size_y, size_x, pos_y, pos_x)
 
     win.border()
     win.attron(curses.A_BOLD)
 
-    win.addstr(1, 1, str(text))
+    if len(wrapped) > 0:
+        for i, ln in enumerate(wrapped):
+            win.addstr(i + 1, 1, str(ln))
+    else:
+        win.addstr(1, 1, str(text))
 
     win.getch()
     win.attroff(curses.A_BOLD)
@@ -519,12 +531,14 @@ def set_value(obj, msel):
             obj[i]['value'] = False
             i += 1
 
-        i = msel -1
+        i = msel - 1
 
         while 'radio' in obj[i] and i >= 0:
             obj[i]['value'] = False
             i -= 1
 
+    elif 'textdisplay' in obj[msel]:
+        pass
 
 
 def main():
