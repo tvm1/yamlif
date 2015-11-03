@@ -64,7 +64,7 @@ content:
                 value: Value!
                 title: Text value ABC
               - textbox: value_601
-                value: Some random value, really random.
+                value: Very random.
                 title: Text value DEF
               - textbox: value_602
                 title: Text value GHI
