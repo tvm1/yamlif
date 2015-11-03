@@ -322,7 +322,7 @@ def draw_page(screen, yamlobj, obj, mtitle, msel):
             msel += 1
 
     elif ckey == curses.KEY_ENTER or ckey == 10 or ckey == ord(" "):
-        set_value(obj[msel])
+        set_value(obj, msel)
 
     elif ckey == ord("q") or ckey == ord("Q"):
         clean_curses()
@@ -495,19 +495,36 @@ def get_objectcontent(obj, objid):
     return result
 
 
-def set_value(obj):
+def set_value(obj, msel):
     """
     Changes value of given YAML object.
 
     :param obj: Structure containing Python dictionary
+    :param msel: Object index to modify
     :return: None
     """
 
-    if 'checkbox' in obj:
-        if obj['value'] == False:
-            obj['value'] = True
+    if 'checkbox' in obj[msel]:
+        if obj[msel]['value'] is False:
+            obj[msel]['value'] = True
         else:
-            obj['value'] = False
+            obj[msel]['value'] = False
+
+    elif 'radio' in obj[msel]:
+        obj[msel]['value'] = True
+
+        i = msel + 1
+
+        while 'radio' in obj[i] and i < len(obj):
+            obj[i]['value'] = False
+            i += 1
+
+        i = msel -1
+
+        while 'radio' in obj[i] and i >= 0:
+            obj[i]['value'] = False
+            i -= 1
+
 
 
 def main():
