@@ -605,15 +605,21 @@ def set_value(obj, msel, screen):
 
         i = msel + 1
 
-        while 'radio' in obj[i] and i < len(obj):
-            obj[i]['value'] = False
-            i += 1
+        while i < len(obj):
+            if 'radio' in obj[i]:
+                obj[i]['value'] = False
+                i += 1
+            else:
+                break
 
         i = msel - 1
 
-        while 'radio' in obj[i] and i >= 0:
-            obj[i]['value'] = False
-            i -= 1
+        while i >= 0:
+            if 'radio' in obj[i]:
+                obj[i]['value'] = False
+                i -= 1
+            else:
+                break
 
     elif 'textbox' in obj[msel]:
 
