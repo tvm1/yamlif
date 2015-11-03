@@ -380,6 +380,45 @@ def draw_popup(screen, text='empty'):
     screen.refresh()
 
 
+def draw_inputbox(screen, text='empty'):
+    """
+    Generic function that draws a popup window in UI.
+
+    :param screen: Curses screen object.
+    :param text: Text to be displayed
+    :return: value
+    """
+    maxy, maxx = screen.getmaxyx()
+
+    pos_y = int(maxy / 2 - 1)
+    pos_x = int(maxx / 2 - 12)
+
+    win = curses.newwin(3, 25, pos_y, pos_x)
+
+    win.border()
+    win.attron(curses.A_BOLD)
+
+    # win.addstr(1, 1, str(text))
+    win.attroff(curses.A_BOLD)
+
+    curses.echo()
+    win.addstr(1,1,str(text))
+    win.move(1, 0)
+    curses.curs_set(1)
+
+
+    cmd = win.getstr(1,1,22).decode(encoding="utf-8")
+
+    curses.curs_set(0)
+
+
+    del win
+    screen.touchwin()
+    screen.refresh()
+
+    return cmd
+
+
 def open_yaml(yfile):
     """
     This function opens file with YAML configuration.
@@ -536,6 +575,15 @@ def set_value(obj, msel, screen):
         while 'radio' in obj[i] and i >= 0:
             obj[i]['value'] = False
             i -= 1
+
+    elif 'textbox' in obj[msel]:
+
+        if 'value' in obj[msel]:
+            newval = draw_inputbox(screen, obj[msel]['value'])
+            obj[msel]['value'] = str(newval)
+        else:
+            newval = draw_inputbox(screen, '')
+            obj[msel]['value'] = str(newval)
 
     elif 'textdisplay' in obj[msel]:
         draw_popup(screen, obj[msel]['content'])
