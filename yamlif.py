@@ -322,7 +322,7 @@ def draw_page(screen, yamlobj, obj, mtitle, msel):
             msel += 1
 
     elif ckey == curses.KEY_ENTER or ckey == 10 or ckey == ord(" "):
-        set_value(obj, msel)
+        set_value(obj, msel, screen)
 
     elif ckey == ord("q") or ckey == ord("Q"):
         clean_curses()
@@ -507,7 +507,7 @@ def get_objectcontent(obj, objid):
     return result
 
 
-def set_value(obj, msel):
+def set_value(obj, msel, screen):
     """
     Changes value of given YAML object.
 
@@ -538,7 +538,7 @@ def set_value(obj, msel):
             i -= 1
 
     elif 'textdisplay' in obj[msel]:
-        pass
+        draw_popup(screen, obj[msel]['content'])
 
 
 def main():
