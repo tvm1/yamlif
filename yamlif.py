@@ -3,6 +3,7 @@
 import sys
 import os
 import curses
+import curses.textpad
 import textwrap
 import re
 
@@ -382,7 +383,7 @@ def draw_popup(screen, text='empty'):
 
 def draw_inputbox(screen, text='empty'):
     """
-    Generic function that draws a popup window in UI.
+    Generic function that draws a inputbox in UI.
 
     :param screen: Curses screen object.
     :param text: Text to be displayed
@@ -394,29 +395,26 @@ def draw_inputbox(screen, text='empty'):
     pos_x = int(maxx / 2 - 12)
 
     win = curses.newwin(3, 25, pos_y, pos_x)
-
     win.border()
-    win.attron(curses.A_BOLD)
+    win.refresh()
+    swin = win.derwin(1, 23, 1, 1)
 
-    # win.addstr(1, 1, str(text))
-    win.attroff(curses.A_BOLD)
-
-    curses.echo()
-    win.addstr(1,1,str(text))
-    win.move(1, 0)
+    curses.cbreak()
     curses.curs_set(1)
+    screen.keypad(1)
 
-
-    cmd = win.getstr(1,1,22).decode(encoding="utf-8")
+    tpad = curses.textpad.Textbox(swin)
+    swin.addstr(0, 0, str(text))
+    value = tpad.edit()
 
     curses.curs_set(0)
 
-
+    del swin
     del win
     screen.touchwin()
     screen.refresh()
 
-    return cmd
+    return value.rstrip()
 
 
 def open_yaml(yfile):
