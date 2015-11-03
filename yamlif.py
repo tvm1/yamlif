@@ -322,7 +322,7 @@ def draw_page(screen, yamlobj, obj, mtitle, msel):
             msel += 1
 
     elif ckey == curses.KEY_ENTER or ckey == 10 or ckey == ord(" "):
-        draw_popup(screen, 'Nothing yet.')
+        set_value(obj[msel])
 
     elif ckey == ord("q") or ckey == ord("Q"):
         clean_curses()
@@ -495,16 +495,19 @@ def get_objectcontent(obj, objid):
     return result
 
 
-def set_value(yamlobj, objid):
+def set_value(obj):
     """
-    Sets value of given YAML object.
+    Changes value of given YAML object.
 
-    :param yamlobj: Whole python object ( nested list / dicts )
-    :param obidj: YAML object id
+    :param obj: Structure containing Python dictionary
     :return: None
     """
 
-    get_nodetype(yamlobj, objid)
+    if 'checkbox' in obj:
+        if obj['value'] == False:
+            obj['value'] = True
+        else:
+            obj['value'] = False
 
 
 def main():
