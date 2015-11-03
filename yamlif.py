@@ -264,7 +264,7 @@ def draw_page(screen, yamlobj, obj, mtitle, msel):
                 offset += 5
                 break
             else:
-                textlist = textwrap.wrap(elem.get('content'), size_x - 2 - len(elem.get('title')))
+                textlist = textwrap.wrap(elem.get('content'), size_x - 4 - len(elem.get('title')))
 
             # print content of the textarea
             for j, ln in enumerate(textlist):
@@ -402,6 +402,47 @@ def draw_inputbox(screen, text='empty'):
     curses.cbreak()
     curses.curs_set(1)
     screen.keypad(1)
+
+    tpad = curses.textpad.Textbox(swin)
+    swin.addstr(0, 0, str(text))
+    value = tpad.edit()
+
+    curses.curs_set(0)
+
+    del swin
+    del win
+    screen.touchwin()
+    screen.refresh()
+
+    return value.rstrip()
+
+
+def draw_inputarea(screen, text='empty'):
+    """
+    Generic function that draws a 'editor' in UI.
+
+    :param screen: Curses screen object.
+    :param text: Text to be displayed
+    :return: value
+    """
+    maxy, maxx = screen.getmaxyx()
+
+    pos_y = int(4)
+    pos_x = int(4)
+
+    win = curses.newwin(maxy - 8, maxx - 8, pos_y, pos_x)
+    win.border()
+    win.refresh()
+
+    swin = win.derwin(maxy - 10, maxx - 10, 1, 1)
+
+    curses.cbreak()
+    curses.curs_set(1)
+    screen.keypad(1)
+
+    win.addstr(0, 1, 'EMACS-like keys available, CTRL-G to exit')
+    win.refresh()
+
 
     tpad = curses.textpad.Textbox(swin)
     swin.addstr(0, 0, str(text))
@@ -582,6 +623,15 @@ def set_value(obj, msel, screen):
         else:
             newval = draw_inputbox(screen, '')
             obj[msel]['value'] = str(newval)
+
+    elif 'textarea' in obj[msel]:
+
+        if 'content' in obj[msel]:
+            newval = draw_inputarea(screen, obj[msel]['content'])
+            obj[msel]['content'] = str(newval)
+        else:
+            newval = draw_inputarea(screen, '')
+            obj[msel]['content'] = str(newval)
 
     elif 'textdisplay' in obj[msel]:
         draw_popup(screen, obj[msel]['content'])
