@@ -180,6 +180,8 @@ def draw_page(screen, obj, ptitle, msel):
         elif 'textbox' in elem:
             size_y += 1
             width = len(elem.get('title')) + value_length + 4
+            if width > maxx:
+                width = maxx
             newelem = 'textbox'
         elif 'textarea' in elem:
             size_y += 5
@@ -215,7 +217,7 @@ def draw_page(screen, obj, ptitle, msel):
             size_x = width
 
     # bail out if page is too large (for now)
-    if size_y > maxy or size_x > maxx:
+    if size_y > maxy:
         draw_popup(screen, 'Page is way too large to view.')
         return -1
 
@@ -261,7 +263,16 @@ def draw_page(screen, obj, ptitle, msel):
 
         elif 'textbox' in elem:
             newelem = 'textbox'
-            win.addstr(i + offset, 1, elem.get('title') + ": " + str(elem.get('value', '')), cl)
+
+            # value and title might be too long
+            if len(str(elem.get('title'))) + len(str(elem.get('value'))) + 4 <= size_x:
+                win.addstr(i + offset, 1, elem.get('title') + ": " + str(elem.get('value', '')), cl)
+            else:
+                # so truncate it to fit the screen
+                spc = size_x - len(str(elem.get('title'))) - 4
+                ln = elem.get('value',' ')[0:spc]
+                ln = re.sub('...............$', '... [truncated]', ln)
+                win.addstr(i + offset, 1, elem.get('title') + ": " + str(ln), cl)
 
         elif 'textarea' in elem:
             newelem = 'textarea'
