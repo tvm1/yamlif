@@ -215,7 +215,7 @@ def draw_page(screen, obj, ptitle, msel):
             size_x = width
 
     # bail out if page is too large (for now)
-    if size_y > maxy:
+    if size_y > maxy or size_x > maxx:
         draw_popup(screen, 'Page is way too large to view.')
         return -1
 
