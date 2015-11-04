@@ -84,18 +84,17 @@ def draw_menu(screen, menu_titles, mtitle, msel):
     size_x = max(len(max(menu_titles, key=len)), len(mtitle)) + 2
 
     # calculate position, so the menu is centered
-
     pos_y = int(maxy / 2 - size_y / 2 - 1)
     pos_x = int(maxx / 2 - size_x / 2)
 
     screen.addstr(0, 2, ' ARROWS: Move up/down | ENTER/SPACE: Enter menu | ESC: Exit menu | Q: Quit ')
 
+    # create actual window and border
     win = curses.newwin(size_y, size_x, pos_y, pos_x)
-
     win.border()
     win.attron(curses.A_BOLD)
 
-    # print title
+    # draw title
     win.addstr(0, int(size_x / 2 - len(mtitle) / 2), mtitle)
 
     # main loop that handles keyboard input and redrawing
@@ -216,11 +215,12 @@ def draw_page(screen, obj, ptitle, msel):
     pos_y = int(maxy / 2 - size_y / 2)
     pos_x = int(maxx / 2 - size_x / 2)
 
+    # create actual window and border
     win = curses.newwin(size_y, size_x, pos_y, pos_x)
-
     win.border()
     win.attron(curses.A_BOLD)
 
+    # draw title
     win.addstr(0, int(size_x / 2 - len(ptitle) / 2), ptitle)
 
     newelem = None
@@ -250,13 +250,7 @@ def draw_page(screen, obj, ptitle, msel):
                 win.addstr(i + offset, 1, '( ) ' + elem.get('title'), cl)
         elif 'textbox' in elem:
             newelem = 'textbox'
-
-            if elem.get('value') is None:
-                value = ''
-            else:
-                value = str(elem.get('value'))
-
-            win.addstr(i + offset, 1, elem.get('title') + ": " + value, cl)
+            win.addstr(i + offset, 1, elem.get('title') + ": " + str(elem.get('value', '')), cl)
         elif 'textarea' in elem:
             newelem = 'textarea'
 
