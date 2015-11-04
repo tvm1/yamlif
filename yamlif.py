@@ -141,13 +141,13 @@ def draw_selector(screen, menu_titles, mtitle, msel):
 
 def draw_page(screen, yamlobj, obj, mtitle, msel):
     """
-    This functions draws page and it's content.
+    This functions draws page and its content.
 
     :param screen: Curses screen object.
     :param yamlobj: Whole python object ( nested list / dicts )
     :param obj: Python object ( nested list / dicts )
-    :param mid: Page id
     :param mtitle: Page title
+    :param msel: Highlighted item
     :return: Position of currently selected page element
     """
 
@@ -443,7 +443,6 @@ def draw_inputarea(screen, text='empty'):
     win.addstr(0, 1, 'EMACS-like keys available, CTRL-G to exit')
     win.refresh()
 
-
     tpad = curses.textpad.Textbox(swin)
     swin.addstr(0, 0, str(text))
     value = tpad.edit()
@@ -507,7 +506,7 @@ def get_nodetype(obj, objid):
     """
     Returns key of the object with given ID. (eg., menu, page, etc. )
 
-    :param obj Structure containing YAML object ( nested lists / dictionaries ):
+    :param obj: Structure containing YAML object ( nested lists / dictionaries )
     :param objid: YAML ID of given node
     :return: Key of given ID
     """
@@ -534,7 +533,7 @@ def get_title(obj, objid):
     """
     Returns title value of the object with given ID.
 
-    :param obj Structure containing YAML object ( nested lists / dictionaries ):
+    :param obj: Structure containing YAML object ( nested lists / dictionaries )
     :param objid: YAML ID of given node
     :return: Title of given ID
     """
@@ -562,7 +561,7 @@ def get_objectcontent(obj, objid):
     """
     Returns list / dictionary structure that is content of given YAML ID.
 
-    :param obj Structure containing YAML object ( nested lists / dictionaries ):
+    :param obj: Structure containing YAML object ( nested lists / dictionaries ):
     :param objid: YAML ID of given node
     :return: Nested list / dictionary
     """
@@ -591,6 +590,7 @@ def set_value(obj, msel, screen):
 
     :param obj: Structure containing Python dictionary
     :param msel: Object index to modify
+    :param screen: Screen object
     :return: None
     """
 
