@@ -87,7 +87,7 @@ def draw_menu(screen, menu_titles, mtitle, msel):
     pos_y = int(maxy / 2 - size_y / 2 - 1)
     pos_x = int(maxx / 2 - size_x / 2)
 
-    screen.addstr(0, 2, ' ARROWS: Move up/down | ENTER/SPACE: Enter menu | ESC: Exit menu | Q: Quit ')
+    screen.addstr(0, 2, ' ARROWS: Up/down | ENTER/SPACE: Enter/edit | ESC/BACKSPACE: Exit | Q: Quit ')
 
     # create actual window and border
     win = curses.newwin(size_y, size_x, pos_y, pos_x)
@@ -378,9 +378,6 @@ def draw_popup(screen, text='empty'):
 
         # clear and redraw
         win.clear()
-        win.attron(curses.A_BOLD)
-        win.border()
-        win.attroff(curses.A_BOLD)
 
         # print text into window
         if len(wrapped) > 0:
@@ -391,8 +388,12 @@ def draw_popup(screen, text='empty'):
         else:
             win.addstr(1, 1, str(text))
 
+        win.attron(curses.A_BOLD)
+        win.border()
+        win.attroff(curses.A_BOLD)
+
         if size_x >= 80:
-            win.addstr(0, 2, ' ARROWS: Move up/down | ENTER/SPACE/BACKSPACE/ESC: Exit view | Q: Quit ',
+            win.addstr(0, 2, ' ARROWS: Up/down | ENTER/SPACE/BACKSPACE/ESC: Exit view | Q: Quit ',
                        curses.color_pair(3))
 
         # display arrows, if scrollable
@@ -435,18 +436,22 @@ def draw_inputbox(screen, text='empty'):
     """
     maxy, maxx = screen.getmaxyx()
 
+    # calculate position, so the inputbox is centered
     pos_y = int(maxy / 2 - 1)
     pos_x = int(maxx / 2 - 12)
 
+    # create actual window and border
     win = curses.newwin(3, 25, pos_y, pos_x)
     win.border()
     win.refresh()
+
     swin = win.derwin(1, 23, 1, 1)
 
     curses.cbreak()
     curses.curs_set(1)
     screen.keypad(1)
 
+    # draw textpad and read value
     tpad = curses.textpad.Textbox(swin)
     swin.addstr(0, 0, str(text))
     value = tpad.edit()
