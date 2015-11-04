@@ -651,13 +651,15 @@ def set_value(obj, msel, screen):
     """
     Changes value of given YAML object.
 
-    :param obj: Structure containing Python dictionary
-    :param msel: Object index to modify
-    :param screen: Screen object
-    :return: None
+    :param obj: Structure containing Python dictionary.
+    :param msel: Object index to modify.
+    :param screen: Screen object.
+    :return: None.
     """
 
+    # determine what object we try to change and act accordingly
     if 'checkbox' in obj[msel]:
+
         if obj[msel]['value'] is False:
             obj[msel]['value'] = True
         else:
@@ -665,9 +667,9 @@ def set_value(obj, msel, screen):
 
     elif 'radio' in obj[msel]:
         obj[msel]['value'] = True
-
         i = msel + 1
 
+        # disable other adjacent radioboxes
         while i < len(obj):
             if 'radio' in obj[i]:
                 obj[i]['value'] = False
@@ -686,6 +688,7 @@ def set_value(obj, msel, screen):
 
     elif 'textbox' in obj[msel]:
 
+        # if there's value, edit it
         if 'value' in obj[msel]:
             newval = draw_inputbox(screen, obj[msel]['value'])
             obj[msel]['value'] = str(newval)
@@ -695,6 +698,7 @@ def set_value(obj, msel, screen):
 
     elif 'textarea' in obj[msel]:
 
+        # if there's value, edit it
         if 'value' in obj[msel]:
             newval = draw_inputarea(screen, obj[msel]['value'])
             obj[msel]['value'] = newval
@@ -703,6 +707,8 @@ def set_value(obj, msel, screen):
             obj[msel]['value'] = newval
 
     elif 'textdisplay' in obj[msel]:
+
+        # open scrollable window
         draw_popup(screen, obj[msel]['value'])
 
 
@@ -753,15 +759,21 @@ def main():
 
         eltype = get_nodetype(yamlobj, mid)
 
+        # we entered menu, append it to history
         if eltype == 'menu':
             mhist.append(mid)
 
         # determine what we try to open and act accordingly
         if eltype == 'page':
             psel = 0
+
+            # don't leave page unless ESC is pressed
             while psel != -1:
                 psel = draw_page(stdscr, get_objectcontent(yamlobj, mid), get_title(yamlobj, mid), psel)
+
         elif eltype == 'menu':
+
+            # entering new menu, get title and content
             mtitle = get_title(yamlobj, mid)
             menu_ids, menu_titles = get_menulist(get_objectcontent(yamlobj, mid))
             msel = 0
