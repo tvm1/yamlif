@@ -87,7 +87,7 @@ def draw_menu(screen, menu_titles, mtitle, msel):
     pos_y = int(maxy / 2 - size_y / 2 - 1)
     pos_x = int(maxx / 2 - size_x / 2)
 
-    screen.addstr(0, 2, ' ARROWS: Up/down | ENTER/SPACE: Enter/edit | ESC/BACKSPACE: Exit | Q: Quit ')
+    screen.addstr(0, 2, ' ARROWS: Up/down | ENTER/SPACE: Enter/edit | ESC/BACKSPACE: Exit | Q: Quit ', curses.color_pair(1))
 
     # create actual window and border
     win = curses.newwin(size_y, size_x, pos_y, pos_x)
@@ -394,14 +394,14 @@ def draw_popup(screen, text='empty'):
 
         if size_x >= 80:
             win.addstr(0, 2, ' ARROWS: Up/down | ENTER/SPACE/BACKSPACE/ESC: Exit view | Q: Quit ',
-                       curses.color_pair(3))
+                       curses.color_pair(1))
 
         # display arrows, if scrollable
         if start_pos != 0:
-            win.addstr(0, size_x - 7, '↑↑↑↑↑', curses.color_pair(5))
+            win.addstr(0, size_x - 7, '↑↑↑↑↑', curses.color_pair(1))
 
         if start_pos + size_y - 2 < len(wrapped):
-            win.addstr(size_y - 1, size_x - 7, '↓↓↓↓↓', curses.color_pair(5))
+            win.addstr(size_y - 1, size_x - 7, '↓↓↓↓↓', curses.color_pair(1))
 
         win.refresh()
         ckey = screen.getch()
