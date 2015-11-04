@@ -91,8 +91,9 @@ def draw_menu(screen, menu_titles, mtitle, msel):
 
     # create actual window and border
     win = curses.newwin(size_y, size_x, pos_y, pos_x)
-    win.border()
     win.attron(curses.A_BOLD)
+    win.border()
+    win.attroff(curses.A_BOLD)
 
     # draw title
     win.addstr(0, int(size_x / 2 - len(mtitle) / 2), mtitle)
@@ -218,8 +219,9 @@ def draw_page(screen, obj, ptitle, msel):
 
     # create actual window and border
     win = curses.newwin(size_y, size_x, pos_y, pos_x)
-    win.border()
     win.attron(curses.A_BOLD)
+    win.border()
+    win.attroff(curses.A_BOLD)
 
     # draw title
     win.addstr(0, int(size_x / 2 - len(ptitle) / 2), ptitle)
