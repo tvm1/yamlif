@@ -313,14 +313,14 @@ def draw_page(screen, obj, ptitle, msel):
     # read keys and update, edit value on ENTER, return -1 if leaving
     if ckey == curses.KEY_UP:
         if msel == 0:
-           msel = len(obj) - 1
+            msel = len(obj) - 1
         else:
-           msel -= 1
+            msel -= 1
     elif ckey == curses.KEY_DOWN:
         if msel == len(obj) - 1:
-           msel = 0
+            msel = 0
         else:
-           msel += 1
+            msel += 1
     elif ckey == curses.KEY_ENTER or ckey == 10 or ckey == ord(" "):
         set_value(obj, msel, screen)
     elif ckey == ord("q") or ckey == ord("Q"):
@@ -353,7 +353,9 @@ def draw_popup(screen, text='empty'):
         # popup needs more than one line
         size_x = int(maxx / 1.5) + 2
         wrapped = textwrap.wrap(text, int(maxx / 1.5) - 2)
-        size_y = len(wrapped) + 2
+
+        if len(wrapped) + 2 > int(maxy / 1.5):
+            size_y = int(maxy / 1.5)
     else:
         # popup fits on one line
         size_x = len(text) + 2
@@ -363,19 +365,44 @@ def draw_popup(screen, text='empty'):
     pos_y = int(maxy / 2 - size_y / 2)
     pos_x = int(maxx / 2 - size_x / 2)
 
-    # create actual window with border
+    # create actual window
     win = curses.newwin(size_y, size_x, pos_y, pos_x)
-    win.attron(curses.A_BOLD)
-    win.border()
-    win.attroff(curses.A_BOLD)
 
-    if len(wrapped) > 0:
-        for i, ln in enumerate(wrapped):
-            win.addstr(i + 1, 1, str(ln))
-    else:
-        win.addstr(1, 1, str(text))
+    start_pos = 0
 
-    win.getch()
+    while True:
+
+        # clear and redraw
+        win.clear()
+        win.attron(curses.A_BOLD)
+        win.border()
+        win.attroff(curses.A_BOLD)
+
+        if len(wrapped) > 0:
+            j = 0
+            for i in range(1, size_y - 1):
+                win.addstr(i, 1, str(wrapped[start_pos + j]))
+                j += 1
+        else:
+            win.addstr(1, 1, str(text))
+
+        win.refresh()
+        ckey = screen.getch()
+
+        # read keys scroll and redraw, leave on ENTER / ESC
+        if ckey == curses.KEY_UP:
+            if start_pos > 0:
+                start_pos -= 1
+        if ckey == curses.KEY_DOWN:
+            if start_pos + size_y - 2 < len(wrapped):
+                start_pos += 1
+        if ckey == curses.KEY_ENTER or ckey == 10 or ckey == ord(" "):
+            break
+        if ckey == ord("q") or ckey == ord("Q"):
+            clean_curses()
+            quit(0)
+        if ckey == 27 or ckey == curses.KEY_BACKSPACE:
+            break
 
     del win
     screen.touchwin()
