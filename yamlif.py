@@ -186,9 +186,9 @@ def draw_page(screen, obj, ptitle, msel):
         elif 'textdisplay' in elem:
 
             # wrapping is handled here
-            if len(elem.get('content')) > int(maxx / 2):
+            if len(elem.get('value')) > int(maxx / 2):
                 width = int(maxx / 2)
-                wrapped = textwrap.wrap(elem.get('content'), int(maxx / 2) - 2)
+                wrapped = textwrap.wrap(elem.get('value'), int(maxx / 2) - 2)
 
                 # if it's too long, we will truncate it to five line
                 if len(wrapped) > 4:
@@ -198,7 +198,7 @@ def draw_page(screen, obj, ptitle, msel):
 
             else:
                 # it's only one line
-                width = len(elem.get('content')) + 2
+                width = len(elem.get('value')) + 2
                 size_y += 1
 
             newelem = 'textdisplay'
@@ -285,7 +285,7 @@ def draw_page(screen, obj, ptitle, msel):
             newelem = 'textdisplay'
 
             # wrapping is handled here
-            textlist = textwrap.wrap(elem.get('content'), size_x - 2)
+            textlist = textwrap.wrap(elem.get('value'), size_x - 2)
 
             # print whatever is in content of textdisplay
             for j, ln in enumerate(textlist):
@@ -689,7 +689,7 @@ def set_value(obj, msel, screen):
             obj[msel]['content'] = str(newval)
 
     elif 'textdisplay' in obj[msel]:
-        draw_popup(screen, obj[msel]['content'])
+        draw_popup(screen, obj[msel]['value'])
 
 
 def main():

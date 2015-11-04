@@ -52,7 +52,7 @@ content:
                 value: False
               - textdisplay: warning_1
                 title: Warning!
-                content: >
+                value: >
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                   Pellentesque molestie non tellus nec ultrices. Duis quis ipsum vitae urna pellentesque congue.
                   Phasellus at ipsum iaculis, sollicitudin orci ac, tincidunt augue. Nunc facilisis, odio ut
@@ -126,7 +126,7 @@ content:
                 value: True
               - textdisplay: warning_1
                 title: Warning!
-                content: >
+                value: >
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                   Pellentesque molestie non tellus nec ultrices. Duis quis ipsum vitae urna pellentesque congue.
 
@@ -174,7 +174,7 @@ content:
     content:
       - textdisplay: warning_1
         title: Very long text.
-        content: >
+        value: >
           This
           is
           very
