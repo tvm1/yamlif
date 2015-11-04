@@ -214,6 +214,11 @@ def draw_page(screen, obj, ptitle, msel):
         if width > size_x:
             size_x = width
 
+    # bail out if page is too large (for now)
+    if size_y > maxy:
+        draw_popup(screen, 'Page is way too large to view.')
+        return -1
+
     # calculate position, so the page is centered
     pos_y = int(maxy / 2 - size_y / 2)
     pos_x = int(maxx / 2 - size_x / 2)
