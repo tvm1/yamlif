@@ -79,13 +79,11 @@ def draw_menu(screen, menu_titles, mtitle, msel):
     screen.border()
     screen.refresh()
 
+    # calculate minimal menu size to fit content and title
     size_y = len(menu_titles) + 2
-    size_x = len(max(menu_titles, key=len)) + 2
+    size_x = max(len(max(menu_titles, key=len)), len(mtitle)) + 2
 
-    # menu should fit at least its title
-    if size_x < len(mtitle) + 2:
-        size_x = len(mtitle) + 2
-
+    # calculate position, so the menu is centered
     pos_y = int(maxy / 2 - size_y / 2 - int(size_y / 2))
     pos_x = int(maxx / 2 - int(size_x / 2))
 
@@ -96,10 +94,13 @@ def draw_menu(screen, menu_titles, mtitle, msel):
     win.border()
     win.attron(curses.A_BOLD)
 
+    # print title
     win.addstr(0, int(size_x / 2 - len(mtitle) / 2), mtitle)
 
     # main loop that handles keyboard input and redrawing
     while True:
+
+        # print menu items
         for i, mitem in enumerate(menu_titles):
             mitem = mitem.ljust(size_x - 2)
             if msel == i:
@@ -110,26 +111,23 @@ def draw_menu(screen, menu_titles, mtitle, msel):
         win.refresh()
         ckey = screen.getch()
 
+        # read keys and redraw, return item index on ENTER, return -1 if leaving
         if ckey == curses.KEY_UP:
             if msel == 0:
                 msel = len(menu_titles) - 1
             else:
                 msel += -1
-
         if ckey == curses.KEY_DOWN:
             if msel == len(menu_titles) - 1:
                 msel = 0
             else:
                 msel += 1
-
         if ckey == curses.KEY_ENTER or ckey == 10 or ckey == ord(" "):
             del win
             return msel
-
         if ckey == ord("q") or ckey == ord("Q"):
             clean_curses()
             quit(0)
-
         if ckey == 27 or ckey == curses.KEY_BACKSPACE:
             return -1
 
