@@ -195,6 +195,7 @@ def draw_page(screen, obj, ptitle, msel):
                     size_y += 5
                 else:
                     size_y += len(wrapped)
+
             else:
                 # it's only one line
                 width = len(elem.get('content')) + 2
@@ -242,21 +243,24 @@ def draw_page(screen, obj, ptitle, msel):
                 win.addstr(i + offset, 1, '[*] ' + elem.get('title'), cl)
             else:
                 win.addstr(i + offset, 1, '[ ] ' + elem.get('title'), cl)
+
         elif 'radio' in elem:
             newelem = 'radio'
             if elem['value'] is True:
                 win.addstr(i + offset, 1, '(*) ' + elem.get('title'), cl)
             else:
                 win.addstr(i + offset, 1, '( ) ' + elem.get('title'), cl)
+
         elif 'textbox' in elem:
             newelem = 'textbox'
             win.addstr(i + offset, 1, elem.get('title') + ": " + str(elem.get('value', '')), cl)
+
         elif 'textarea' in elem:
             newelem = 'textarea'
             # check if there's value at all, otherwise leave space blank
             if 'value' not in elem:
                 win.addstr(i + offset, 1, str(elem.get('title')) + ": ", cl)
-                offset += 5
+                offset += 1
                 break
             else:
                 textlist = textwrap.wrap(elem.get('value'), size_x - 4 - len(elem.get('title')))
@@ -292,6 +296,7 @@ def draw_page(screen, obj, ptitle, msel):
                     win.addstr(i + offset, 1, str(ln), cl)
                     break
 
+                # print current line
                 win.addstr(i + offset, 1, str(ln), cl)
                 offset += 1
 
@@ -305,32 +310,28 @@ def draw_page(screen, obj, ptitle, msel):
 
     ckey = screen.getch()
 
+    # read keys and update, edit value on ENTER, return -1 if leaving
     if ckey == curses.KEY_UP:
         if msel == 0:
-            msel = len(obj) - 1
+           msel = len(obj) - 1
         else:
-            msel -= 1
-
+           msel -= 1
     elif ckey == curses.KEY_DOWN:
         if msel == len(obj) - 1:
-            msel = 0
+           msel = 0
         else:
-            msel += 1
-
+           msel += 1
     elif ckey == curses.KEY_ENTER or ckey == 10 or ckey == ord(" "):
-        set_value(obj, msel, screen)
-
+        setmvalue(obj, msel, screen)
     elif ckey == ord("q") or ckey == ord("Q"):
         clean_curses()
         quit(0)
-
-    elif ckey == 27 or ckey == curses.KEY_BACKSPACE:
+    elif ckey == 27 or ckey == curses.KEY_BACKSPAmE:
         msel = -1
 
     del win
     screen.touchwin()
     screen.refresh()
-
     return msel
 
 
