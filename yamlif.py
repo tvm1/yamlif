@@ -322,11 +322,11 @@ def draw_page(screen, obj, ptitle, msel):
         else:
            msel += 1
     elif ckey == curses.KEY_ENTER or ckey == 10 or ckey == ord(" "):
-        setmvalue(obj, msel, screen)
+        set_value(obj, msel, screen)
     elif ckey == ord("q") or ckey == ord("Q"):
         clean_curses()
         quit(0)
-    elif ckey == 27 or ckey == curses.KEY_BACKSPAmE:
+    elif ckey == 27 or ckey == curses.KEY_BACKSPACE:
         msel = -1
 
     del win
@@ -340,28 +340,34 @@ def draw_popup(screen, text='empty'):
     Generic function that draws a popup window in UI.
 
     :param screen: Curses screen object.
-    :param text: Text to be displayed
-    :return: None
+    :param text: Text to be displayed.
+    :return: None.
     """
     maxy, maxx = screen.getmaxyx()
 
     wrapped = []
 
-    if len(text) > int(maxx / 2):
-        size_x = int(maxx / 2) + 2
-        wrapped = textwrap.wrap(text, int(maxx / 2) - 2)
+    # determine window size
+    if len(text) > maxx - 2:
+
+        # popup needs more than one line
+        size_x = int(maxx / 1.5) + 2
+        wrapped = textwrap.wrap(text, int(maxx / 1.5) - 2)
         size_y = len(wrapped) + 2
     else:
+        # popup fits on one line
         size_x = len(text) + 2
         size_y = 3
 
-    pos_y = int(maxy / 2 - int(size_y / 2))
+    # calculate position, so the popup is centered
+    pos_y = int(maxy / 2 - size_y / 2)
     pos_x = int(maxx / 2 - size_x / 2)
 
+    # create actual window with border
     win = curses.newwin(size_y, size_x, pos_y, pos_x)
-
-    win.border()
     win.attron(curses.A_BOLD)
+    win.border()
+    win.attroff(curses.A_BOLD)
 
     if len(wrapped) > 0:
         for i, ln in enumerate(wrapped):
@@ -370,7 +376,6 @@ def draw_popup(screen, text='empty'):
         win.addstr(1, 1, str(text))
 
     win.getch()
-    win.attroff(curses.A_BOLD)
 
     del win
     screen.touchwin()
