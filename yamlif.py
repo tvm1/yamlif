@@ -253,14 +253,13 @@ def draw_page(screen, obj, ptitle, msel):
             win.addstr(i + offset, 1, elem.get('title') + ": " + str(elem.get('value', '')), cl)
         elif 'textarea' in elem:
             newelem = 'textarea'
-
             # check if there's value at all, otherwise leave space blank
-            if 'content' not in elem:
+            if 'value' not in elem:
                 win.addstr(i + offset, 1, str(elem.get('title')) + ": ", cl)
                 offset += 5
                 break
             else:
-                textlist = textwrap.wrap(elem.get('content'), size_x - 4 - len(elem.get('title')))
+                textlist = textwrap.wrap(elem.get('value'), size_x - 4 - len(elem.get('title')))
 
             # print content of the textarea
             for j, ln in enumerate(textlist):
@@ -628,8 +627,8 @@ def set_value(obj, msel, screen):
 
     elif 'textarea' in obj[msel]:
 
-        if 'content' in obj[msel]:
-            newval = draw_inputarea(screen, obj[msel]['content'])
+        if 'value' in obj[msel]:
+            newval = draw_inputarea(screen, obj[msel]['value'])
             obj[msel]['content'] = str(newval)
         else:
             newval = draw_inputarea(screen, '')
