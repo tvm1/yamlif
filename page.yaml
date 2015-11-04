@@ -39,7 +39,7 @@ content:
                 value: 28
               - textarea: text_area_101
                 title: Text area 101
-                content: >
+                value: >
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                   Pellentesque molestie non tellus nec ultrices. Duis quis ipsum vitae urna pellentesque congue.
                   Phasellus at ipsum iaculis, sollicitudin orci ac, tincidunt augue. Nunc facilisis, odio ut
@@ -128,10 +128,10 @@ content:
         content:
           - textarea: text_area_10
             title: First text area
-            content: Values here.
+            value: Values here.
           - textarea: text_area_20
             title: Second text area
-            content: Values here too.
+            value: Values here too.
 
   - page: fifth_page
     title: The last, fifth page.
