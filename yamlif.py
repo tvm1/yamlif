@@ -378,6 +378,7 @@ def draw_popup(screen, text='empty'):
         win.border()
         win.attroff(curses.A_BOLD)
 
+        # print text into window
         if len(wrapped) > 0:
             j = 0
             for i in range(1, size_y - 1):
@@ -386,10 +387,12 @@ def draw_popup(screen, text='empty'):
         else:
             win.addstr(1, 1, str(text))
 
+        win.addstr(0, 2, ' ARROWS: Move up/down | ENTER/SPACE/BACKSPACE/ESC: Exit view | Q: Quit')
         win.refresh()
+
         ckey = screen.getch()
 
-        # read keys scroll and redraw, leave on ENTER / ESC
+        # read keys scroll and redraw, handle exit
         if ckey == curses.KEY_UP:
             if start_pos > 0:
                 start_pos -= 1
