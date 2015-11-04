@@ -138,12 +138,11 @@ def draw_menu(screen, menu_titles, mtitle, msel):
     screen.refresh()
 
 
-def draw_page(screen, yamlobj, obj, mtitle, msel):
+def draw_page(screen, obj, mtitle, msel):
     """
     This functions draws page and its content.
 
     :param screen: Curses screen object.
-    :param yamlobj: Whole python object ( nested list / dicts )
     :param obj: Python object ( nested list / dicts )
     :param mtitle: Page title
     :param msel: Highlighted item
@@ -696,7 +695,7 @@ def main():
         if eltype == 'page':
             psel = 0
             while psel != -1:
-                psel = draw_page(stdscr, yamlobj, get_objectcontent(yamlobj, mid), get_title(yamlobj, mid), psel)
+                psel = draw_page(stdscr, get_objectcontent(yamlobj, mid), get_title(yamlobj, mid), psel)
         elif eltype == 'menu':
             mtitle = get_title(yamlobj, mid)
             menu_ids, menu_titles = get_menulist(get_objectcontent(yamlobj, mid))
