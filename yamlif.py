@@ -467,7 +467,7 @@ def draw_inputbox(screen, text='empty'):
     # create actual window and border
     win = curses.newwin(3, size_x, pos_y, pos_x)
     win.border()
-    win.addstr(0, 1, 'Please insert value:', curses.color_pair(1))
+    win.addstr(0, 1, 'Please insert value (EMACS keys available):', curses.color_pair(1))
     win.refresh()
 
     # derived subwindow
