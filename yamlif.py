@@ -354,8 +354,12 @@ def draw_popup(screen, text='empty'):
         size_x = int(maxx / 1.5) + 2
         wrapped = textwrap.wrap(text, int(maxx / 1.5) - 2)
 
+        # try some reasonable window heights
         if len(wrapped) + 2 > int(maxy / 1.5):
             size_y = int(maxy / 1.5)
+        else:
+            size_y = len(wrapped) + 2
+
     else:
         # popup fits on one line
         size_x = len(text) + 2
