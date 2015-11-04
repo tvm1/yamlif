@@ -25,8 +25,8 @@ def init_curses():
     maxy, maxx = stdscr.getmaxyx()
 
     if maxy < 24 or maxx < 80:
+        print("Sorry, but at least 80x24 is needed.")
         clean_curses()
-        print("Sorry, Only 80x24+ consoles are supported!")
         quit(1)
 
     curses.start_color()
@@ -87,7 +87,8 @@ def draw_menu(screen, menu_titles, mtitle, msel):
     pos_y = int(maxy / 2 - size_y / 2 - 1)
     pos_x = int(maxx / 2 - size_x / 2)
 
-    screen.addstr(0, 2, ' ARROWS: Up/down | ENTER/SPACE: Enter/edit | ESC/BACKSPACE: Exit | Q: Quit ', curses.color_pair(1))
+    screen.addstr(0, 2, ' ARROWS: Up/down | ENTER/SPACE: Enter/edit | ESC/BACKSPACE: Exit | Q: Quit ',
+                  curses.color_pair(1))
 
     # create actual window and border
     win = curses.newwin(size_y, size_x, pos_y, pos_x)
@@ -438,16 +439,23 @@ def draw_inputbox(screen, text='empty'):
     """
     maxy, maxx = screen.getmaxyx()
 
+    if len(str(text)) > 64:
+        draw_popup(screen, 'Field contains invalid value.')
+        return None
+
     # calculate position, so the inputbox is centered
-    pos_y = int(maxy / 2 - 1)
-    pos_x = int(maxx / 2 - 12)
+    size_x = int(67)
+    pos_y = int(maxy / 2 - 2)
+    pos_x = int(maxx / 2 - size_x / 2)
 
     # create actual window and border
-    win = curses.newwin(3, 25, pos_y, pos_x)
+    win = curses.newwin(3, size_x, pos_y, pos_x)
     win.border()
+    win.addstr(0, 1, 'Please insert value:', curses.color_pair(1))
     win.refresh()
 
-    swin = win.derwin(1, 23, 1, 1)
+    # derived subwindow
+    swin = win.derwin(1, size_x - 2, 1, 1)
 
     curses.cbreak()
     curses.curs_set(1)
@@ -685,10 +693,10 @@ def set_value(obj, msel, screen):
 
         if 'value' in obj[msel]:
             newval = draw_inputarea(screen, obj[msel]['value'])
-            obj[msel]['content'] = str(newval)
+            obj[msel]['value'] = newval
         else:
             newval = draw_inputarea(screen, '')
-            obj[msel]['content'] = str(newval)
+            obj[msel]['value'] = newval
 
     elif 'textdisplay' in obj[msel]:
         draw_popup(screen, obj[msel]['value'])

@@ -15,8 +15,8 @@ Single page can contain one of following elements:
 
 - Checkboxes
 - Radio buttons
-- Text input
-- Text area
+- Text input (can contain 64 character long value)
+- Text area (can contain arbitary value)
 - Text display (read only)
 
 ## Menu definition file
