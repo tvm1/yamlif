@@ -352,7 +352,7 @@ def draw_popup(screen, text='empty'):
 
         # popup needs more than one line
         size_x = int(maxx / 1.5) + 2
-        wrapped = textwrap.wrap(text, int(maxx / 1.5) - 2)
+        wrapped = textwrap.wrap(text, int(maxx / 1.5))
 
         # try some reasonable window heights
         if len(wrapped) + 2 > int(maxy / 1.5):
@@ -391,9 +391,18 @@ def draw_popup(screen, text='empty'):
         else:
             win.addstr(1, 1, str(text))
 
-        win.addstr(0, 2, ' ARROWS: Move up/down | ENTER/SPACE/BACKSPACE/ESC: Exit view | Q: Quit')
-        win.refresh()
+        if size_x >= 80:
+            win.addstr(0, 2, ' ARROWS: Move up/down | ENTER/SPACE/BACKSPACE/ESC: Exit view | Q: Quit ',
+                       curses.color_pair(3))
 
+        # display arrows, if scrollable
+        if start_pos != 0:
+            win.addstr(0, size_x - 7, '↑↑↑↑↑', curses.color_pair(5))
+
+        if start_pos + size_y - 2 < len(wrapped):
+            win.addstr(size_y - 1, size_x - 7, '↓↓↓↓↓', curses.color_pair(5))
+
+        win.refresh()
         ckey = screen.getch()
 
         # read keys scroll and redraw, handle exit
