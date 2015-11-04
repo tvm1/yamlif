@@ -56,7 +56,7 @@ def clean_curses():
     """
     Cleans up curses after quit.
 
-    :return: None
+    :return: None.
     """
     curses.curs_set(1)
     curses.nocbreak()
@@ -84,8 +84,9 @@ def draw_menu(screen, menu_titles, mtitle, msel):
     size_x = max(len(max(menu_titles, key=len)), len(mtitle)) + 2
 
     # calculate position, so the menu is centered
-    pos_y = int(maxy / 2 - size_y / 2 - int(size_y / 2))
-    pos_x = int(maxx / 2 - int(size_x / 2))
+
+    pos_y = int(maxy / 2 - size_y / 2 - 1)
+    pos_x = int(maxx / 2 - size_x / 2)
 
     screen.addstr(0, 2, ' ARROWS: Move up/down | ENTER/SPACE: Enter menu | ESC: Exit menu | Q: Quit ')
 
@@ -138,15 +139,15 @@ def draw_menu(screen, menu_titles, mtitle, msel):
     screen.refresh()
 
 
-def draw_page(screen, obj, mtitle, msel):
+def draw_page(screen, obj, ptitle, msel):
     """
     This functions draws page and its content.
 
     :param screen: Curses screen object.
-    :param obj: Python object ( nested list / dicts )
-    :param mtitle: Page title
-    :param msel: Highlighted item
-    :return: Position of currently selected page element
+    :param obj: Python object ( nested list / dicts ).
+    :param ptitle: Page title.
+    :param msel: Currently Highlighted item.
+    :return: Position of currently selected page element.
     """
 
     screen.touchwin()
@@ -154,11 +155,12 @@ def draw_page(screen, obj, mtitle, msel):
 
     maxy, maxx = screen.getmaxyx()
 
+    # something to begin with, fit at least page title
     size_y = 2
-    size_x = len(mtitle) + 2
+    size_x = len(ptitle) + 2
     newelem = None
 
-    # calculate page height and width
+    # determine page height and width
     for i, elem in enumerate(obj):
 
         if elem.get('value') is None:
@@ -189,7 +191,7 @@ def draw_page(screen, obj, mtitle, msel):
                 width = int(maxx / 2)
                 wrapped = textwrap.wrap(elem.get('content'), int(maxx / 2) - 2)
 
-                # if it's too long, we will truncate it
+                # if it's too long, we will truncate it to five line
                 if len(wrapped) > 4:
                     size_y += 5
                 else:
@@ -206,10 +208,12 @@ def draw_page(screen, obj, mtitle, msel):
             if newelem not in obj[i + 1]:
                 size_y += 1
 
+        # current element requires more space, allocate it
         if width > size_x:
             size_x = width
 
-    pos_y = int(maxy / 2 - int(size_y / 2))
+    # calculate position, so the page is centered
+    pos_y = int(maxy / 2 - size_y / 2)
     pos_x = int(maxx / 2 - size_x / 2)
 
     win = curses.newwin(size_y, size_x, pos_y, pos_x)
@@ -217,7 +221,7 @@ def draw_page(screen, obj, mtitle, msel):
     win.border()
     win.attron(curses.A_BOLD)
 
-    win.addstr(0, int(size_x / 2 - len(mtitle) / 2), mtitle)
+    win.addstr(0, int(size_x / 2 - len(ptitle) / 2), ptitle)
 
     newelem = None
     offset = 1
