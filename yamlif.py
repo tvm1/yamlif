@@ -63,7 +63,7 @@ def clean_curses():
     curses.endwin()
 
 
-def draw_selector(screen, menu_titles, mtitle, msel):
+def draw_menu(screen, menu_titles, mtitle, msel):
     """
     This function draws a menu with given title and handles the keyboard input.
 
@@ -676,7 +676,7 @@ def main():
     # main loop that draws menu and allows to traverse & open menu items
     while True:
 
-        msel = draw_selector(stdscr, menu_titles, mtitle, msel)
+        msel = draw_menu(stdscr, menu_titles, mtitle, msel)
 
         # leaving menu and going back to top
         if msel == -1:
