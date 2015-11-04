@@ -69,7 +69,7 @@ def draw_selector(screen, menu_titles, mtitle, msel):
 
     :param screen: Screen object.
     :param menu_titles: List of menu titles.
-    :param mtitle: Title of currently active menu
+    :param mtitle: Title of currently active menu.
     :param msel: Starting position of cursor in menu.
     :return: Index of selected item.
     """
@@ -82,11 +82,12 @@ def draw_selector(screen, menu_titles, mtitle, msel):
     size_y = len(menu_titles) + 2
     size_x = len(max(menu_titles, key=len)) + 2
 
+    # menu should fit at least its title
     if size_x < len(mtitle) + 2:
         size_x = len(mtitle) + 2
 
-    pos_y = int(maxy / 2 - size_y / 2 - 1)
-    pos_x = int(maxx / 2 - size_x / 2)
+    pos_y = int(maxy / 2 - size_y / 2 - int(size_y / 2))
+    pos_x = int(maxx / 2 - int(size_x / 2))
 
     screen.addstr(0, 2, ' ARROWS: Move up/down | ENTER/SPACE: Enter menu | ESC: Exit menu | Q: Quit ')
 
