@@ -525,8 +525,8 @@ def open_yaml(yfile):
     """
     This function opens file with YAML configuration.
 
-    :param yfile: Name of file
-    :return: Python object ( nested lists / dicts )
+    :param yfile: Name of file.
+    :return: Python object ( nested lists / dicts ).
     """
     with open(yfile, 'r') as stream:
         yamlobj = yaml.load(stream)
@@ -536,17 +536,16 @@ def open_yaml(yfile):
 def get_menulist(yamlobj, root=False):
     """
     This function parses objects returned by get_menucontent() and prepares input for
-    draw_selector().
+    draw_menu().
 
-    :param yamlobj: Python object ( nested list / dicts )
+    :param yamlobj: Python object ( nested list / dicts ).
     :param root: True only if parsing YAML hierarchy from top.
-    :return: menu_ids - list of IDs, menu_titles - list of menu titles
+    :return: menu_ids - list of IDs, menu_titles - list of menu titles.
     """
     menu_ids = []
     menu_titles = []
 
     if root is True:
-
         for obj in yamlobj['content']:
             if 'menu' in obj:
                 menu_ids.append(obj["menu"])
@@ -570,9 +569,9 @@ def get_nodetype(obj, objid):
     """
     Returns key of the object with given ID. (eg., menu, page, etc. )
 
-    :param obj: Structure containing YAML object ( nested lists / dictionaries )
-    :param objid: YAML ID of given node
-    :return: Key of given ID
+    :param obj: Structure containing YAML object ( nested lists / dictionaries ).
+    :param objid: YAML ID of given node.
+    :return: Key of given ID.
     """
     result = None
 
@@ -597,9 +596,9 @@ def get_title(obj, objid):
     """
     Returns title value of the object with given ID.
 
-    :param obj: Structure containing YAML object ( nested lists / dictionaries )
-    :param objid: YAML ID of given node
-    :return: Title of given ID
+    :param obj: Structure containing YAML object ( nested lists / dictionaries ).
+    :param objid: YAML ID of given node.
+    :return: Title of given ID.
     """
 
     result = None
@@ -626,8 +625,8 @@ def get_objectcontent(obj, objid):
     Returns list / dictionary structure that is content of given YAML ID.
 
     :param obj: Structure containing YAML object ( nested lists / dictionaries ):
-    :param objid: YAML ID of given node
-    :return: Nested list / dictionary
+    :param objid: YAML ID of given node.
+    :return: Nested list / dictionary.
     """
     result = None
 
