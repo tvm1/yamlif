@@ -1,6 +1,7 @@
 ---
 menu: main_menu
 title: Welcome to main menu!
+commands: dmesg; read bar
 content:
 
   - menu: first_menu

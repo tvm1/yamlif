@@ -7,6 +7,7 @@ import curses
 import curses.textpad
 import textwrap
 import re
+import subprocess
 
 try:
     import yaml
@@ -64,11 +65,12 @@ def clean_curses():
     curses.endwin()
 
 
-def draw_menu(screen, menu_titles, mtitle, msel):
+def draw_menu(screen, yamlobj, menu_titles, mtitle, msel):
     """
     This function draws a menu with given title and handles the keyboard input.
 
     :param screen: Screen object.
+    :param yamlobj: Python object ( nested list / dicts ).
     :param menu_titles: List of menu titles.
     :param mtitle: Title of currently active menu.
     :param msel: Starting position of cursor in menu.
@@ -88,7 +90,7 @@ def draw_menu(screen, menu_titles, mtitle, msel):
     pos_y = int(maxy / 2 - size_y / 2 - 1)
     pos_x = int(maxx / 2 - size_x / 2)
 
-    screen.addstr(0, 2, ' ARROWS: Up/down | ENTER/SPACE: Enter/edit | ESC/BACKSPACE: Exit | Q: Quit ',
+    screen.addstr(0, 2, 'ENTER/SPACE: Enter/edit | ESC/BACKSP: Exit | R: Run commands | Q: Quit ',
                   curses.color_pair(1))
 
     # create actual window and border
@@ -120,18 +122,20 @@ def draw_menu(screen, menu_titles, mtitle, msel):
                 msel = len(menu_titles) - 1
             else:
                 msel += -1
-        if ckey == curses.KEY_DOWN:
+        elif ckey == curses.KEY_DOWN:
             if msel == len(menu_titles) - 1:
                 msel = 0
             else:
                 msel += 1
-        if ckey == curses.KEY_ENTER or ckey == 10 or ckey == ord(" "):
+        elif ckey == curses.KEY_ENTER or ckey == 10 or ckey == ord(" "):
             del win
             return msel
-        if ckey == ord("q") or ckey == ord("Q"):
+        elif ckey == ord("R") or ckey == ord("r"):
+            run_commands(yamlobj)
+        elif ckey == ord("q") or ckey == ord("Q"):
             clean_curses()
             quit(0)
-        if ckey == 27 or ckey == curses.KEY_BACKSPACE:
+        elif ckey == 27 or ckey == curses.KEY_BACKSPACE:
             return -1
 
     win.refresh()
@@ -348,9 +352,9 @@ def draw_page(screen, fn, obj, pid, ptitle, msel):
 
         # give user some feedback
         if exval == 0:
-            draw_popup(screen,'Data saved.')
+            draw_popup(screen, 'Data saved.')
         else:
-            draw_popup(screen,'Save failed.')
+            draw_popup(screen, 'Save failed.')
     elif ckey == ord("q") or ckey == ord("Q"):
         clean_curses()
         quit(0)
@@ -552,6 +556,27 @@ def open_yaml(yfile):
         yamlobj = yaml.load(stream)
         return yamlobj
 
+
+def run_commands(yamlobj):
+    """
+    Runs commands stored in YAML
+
+    :param yamlobj: Python object ( nested list / dicts ).
+    :return: None.
+    """
+
+    # reset screen
+    clean_curses()
+
+    # run commands
+    commands = (yamlobj.get('commands'))
+    os.system(commands)
+
+    # reinit stuff back
+    curses.noecho()
+    curses.cbreak()
+    curses.curs_set(0)
+    curses.mousemask(1)
 
 def save_yaml(fn, id, obj):
     """
@@ -828,7 +853,7 @@ def main():
     # main loop that draws menu and allows to traverse & open menu items
     while True:
 
-        msel = draw_menu(stdscr, menu_titles, mtitle, msel)
+        msel = draw_menu(stdscr, yamlobj, menu_titles, mtitle, msel)
 
         # leaving menu and going back to top
         if msel == -1:
