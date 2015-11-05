@@ -141,12 +141,13 @@ def draw_menu(screen, menu_titles, mtitle, msel):
     screen.refresh()
 
 
-def draw_page(screen, obj, ptitle, msel):
+def draw_page(screen, obj, pid, ptitle, msel):
     """
     This functions draws page and its content.
 
     :param screen: Curses screen object.
     :param obj: Python object ( nested list / dicts ).
+    :param pid: Page id.
     :param ptitle: Page title.
     :param msel: Currently Highlighted item.
     :return: Position of currently selected page element.
@@ -234,6 +235,10 @@ def draw_page(screen, obj, ptitle, msel):
 
     # draw title
     win.addstr(0, int(size_x / 2 - len(ptitle) / 2), ptitle)
+
+    # some help too
+    if size_x > 7:
+        win.addstr(size_y - 1, 2, 'S: Save', curses.color_pair(1))
 
     newelem = None
     offset = 1
@@ -337,6 +342,8 @@ def draw_page(screen, obj, ptitle, msel):
             msel += 1
     elif ckey == curses.KEY_ENTER or ckey == 10 or ckey == ord(" "):
         set_value(obj, msel, screen)
+    elif ckey == ord("s") or ckey == ord("S"):
+        save_yaml(pid, obj)
     elif ckey == ord("q") or ckey == ord("Q"):
         clean_curses()
         quit(0)
@@ -537,6 +544,46 @@ def open_yaml(yfile):
     with open(yfile, 'r') as stream:
         yamlobj = yaml.load(stream)
         return yamlobj
+
+
+def save_yaml(id, obj):
+    """
+    This function saves values to YAML file.
+
+    :param id: Page ID.
+    :param obj: Python object ( nested lists / dicts ).
+    :return: None.
+    """
+    newobj = []
+    nkey = None
+
+    if len(obj) == 0:
+        return 1
+
+    for elem in obj:
+        if 'checkbox' in elem:
+            nkey = elem['checkbox']
+            nval = elem.get('value', '')
+            newobj.append({nkey: nval})
+        elif 'radio' in elem:
+            nkey = elem['radio']
+            nval = elem.get('value', '')
+            newobj.append({nkey: nval})
+        elif 'textbox' in elem:
+            nkey = elem['textbox']
+            nval = elem.get('value', '')
+            newobj.append({nkey: nval})
+        elif 'textarea' in elem:
+            nkey = elem['textarea']
+            nval = elem.get('value', '')
+            newobj.append({nkey: nval})
+
+    with open('document.yaml', 'r') as rstream:
+        oldsave = yaml.load(rstream)
+        oldsave[id] = newobj
+
+    with open('document.yaml', 'w') as wstream:
+        yaml.dump(oldsave, wstream)
 
 
 def get_menulist(yamlobj, root=False):
@@ -775,7 +822,7 @@ def main():
 
             # don't leave page unless ESC is pressed
             while psel != -1:
-                psel = draw_page(stdscr, get_objectcontent(yamlobj, mid), get_title(yamlobj, mid), psel)
+                psel = draw_page(stdscr, get_objectcontent(yamlobj, mid), mid, get_title(yamlobj, mid), psel)
 
         elif eltype == 'menu':
 
