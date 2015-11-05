@@ -185,7 +185,7 @@ def draw_page(screen, obj, ptitle, msel):
                 width = maxx
             newelem = 'textbox'
         elif 'textarea' in elem:
-            size_y += 5
+            size_y += 2
             width = int(maxx / 2)
             newelem = 'textarea'
         elif 'textdisplay' in elem:
@@ -271,35 +271,29 @@ def draw_page(screen, obj, ptitle, msel):
             else:
                 # so truncate it to fit the screen
                 spc = size_x - len(str(elem.get('title'))) - 4
-                ln = elem.get('value',' ')[0:spc]
+                ln = elem.get('value', ' ')[0:spc]
                 ln = re.sub('...............$', '... [truncated]', ln)
                 win.addstr(i + offset, 1, elem.get('title') + ": " + str(ln), cl)
 
         elif 'textarea' in elem:
             newelem = 'textarea'
+
             # check if there's value at all, otherwise leave space blank
             if 'value' not in elem:
                 win.addstr(i + offset, 1, str(elem.get('title')) + ": ", cl)
-                offset += 1
-                break
-            else:
+                win.addstr(i + offset + 1, 1, str(elem.get('title')) + ": ", cl)
+                offset += 2
+            elif 'value' in elem:
                 textlist = textwrap.wrap(elem.get('value'), size_x - 4 - len(elem.get('title')))
 
-            # print content of the textarea
-            for j, ln in enumerate(textlist):
-
-                # if it's too many lines, truncate
-                if j == 4 and len(textlist) > 4:
-                    ln = re.sub('.............$', '... [wrapped]', ln)
-                    win.addstr(i + offset, 1 + len(elem.get('title')) + 2, str(ln), cl)
-                    break
-
-                if j == 0:
-                    win.addstr(i + offset, 1, str(elem.get('title')) + ": " + str(ln), cl)
-                    offset += 1
-                else:
-                    win.addstr(i + offset, 1 + len(elem.get('title')) + 2, str(ln), cl)
-                    offset += 1
+                for j, ln in enumerate(textlist):
+                    if j == 0:
+                        win.addstr(i + offset, 1, str(elem.get('title')) + ": " + str(ln), cl)
+                        offset += 1
+                    if j == 1:
+                        ln = re.sub('.............$', '... [wrapped]', ln)
+                        win.addstr(i + offset, 1 + len(elem.get('title')) + 2, str(ln), cl)
+                        break
 
         elif 'textdisplay' in elem:
             newelem = 'textdisplay'
