@@ -344,7 +344,13 @@ def draw_page(screen, fn, obj, pid, ptitle, msel):
     elif ckey == curses.KEY_ENTER or ckey == 10 or ckey == ord(" "):
         set_value(obj, msel, screen)
     elif ckey == ord("s") or ckey == ord("S"):
-        save_yaml(fn, pid, obj)
+        exval = save_yaml(fn, pid, obj)
+
+        # give user some feedback
+        if exval == 0:
+            draw_popup(screen,'Data saved.')
+        else:
+            draw_popup(screen,'Save failed.')
     elif ckey == ord("q") or ckey == ord("Q"):
         clean_curses()
         quit(0)
