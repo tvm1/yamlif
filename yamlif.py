@@ -552,7 +552,7 @@ def save_yaml(id, obj):
 
     :param id: Page ID.
     :param obj: Python object ( nested lists / dicts ).
-    :return: Exit value.
+    :return: Exit status.
     """
     newobj = {}
 
@@ -563,21 +563,20 @@ def save_yaml(id, obj):
     for elem in obj:
         if 'checkbox' in elem:
             nkey = elem['checkbox']
-            nval = elem.get('value', '')
+            nval = elem.get('value', "")
             newobj[nkey] = nval
         elif 'radio' in elem:
             nkey = elem['radio']
-            nval = elem.get('value', '')
+            nval = elem.get('value', "")
             newobj[nkey] = nval
         elif 'textbox' in elem:
             nkey = elem['textbox']
-            nval = elem.get('value', '')
+            nval = elem.get('value', "")
             newobj[nkey] = nval
         elif 'textarea' in elem:
             nkey = elem['textarea']
-            nval = elem.get('value', '')
+            nval = elem.get('value', "")
             newobj[nkey] = nval
-
 
     with open('document.yaml', 'r') as rstream:
         oldsave = yaml.load(rstream)
@@ -589,6 +588,8 @@ def save_yaml(id, obj):
 
     with open('document.yaml', 'w') as wstream:
         yaml.dump(oldsave, wstream, default_flow_style=False)
+
+    return 0
 
 
 def get_menulist(yamlobj, root=False):
