@@ -141,11 +141,12 @@ def draw_menu(screen, menu_titles, mtitle, msel):
     screen.refresh()
 
 
-def draw_page(screen, obj, pid, ptitle, msel):
+def draw_page(screen, fn, obj, pid, ptitle, msel):
     """
     This functions draws page and its content.
 
     :param screen: Curses screen object.
+    :param fn: Filename of input file.
     :param obj: Python object ( nested list / dicts ).
     :param pid: Page id.
     :param ptitle: Page title.
@@ -343,7 +344,7 @@ def draw_page(screen, obj, pid, ptitle, msel):
     elif ckey == curses.KEY_ENTER or ckey == 10 or ckey == ord(" "):
         set_value(obj, msel, screen)
     elif ckey == ord("s") or ckey == ord("S"):
-        save_yaml(pid, obj)
+        save_yaml(fn, pid, obj)
     elif ckey == ord("q") or ckey == ord("Q"):
         clean_curses()
         quit(0)
@@ -546,10 +547,11 @@ def open_yaml(yfile):
         return yamlobj
 
 
-def save_yaml(id, obj):
+def save_yaml(fn, id, obj):
     """
     This function saves values to YAML file.
 
+    :param fn: Filename of input file.
     :param id: Page ID.
     :param obj: Python object ( nested lists / dicts ).
     :return: Exit status.
@@ -558,6 +560,15 @@ def save_yaml(id, obj):
 
     if len(obj) == 0:
         return 1
+
+    # make up new name for _data file
+    if re.match('^.*\.yaml$', fn):
+        # just so the source is *never* overwritten
+        fn += '_'
+        fn = re.sub('\.yaml_$', '_data.yaml', fn)
+    else:
+        # filename was odd, so we just use something
+        fn += '.data'
 
     # save only values/items that we want
     for elem in obj:
@@ -578,15 +589,21 @@ def save_yaml(id, obj):
             nval = elem.get('value', "")
             newobj[nkey] = nval
 
-    with open('document.yaml', 'r') as rstream:
-        oldsave = yaml.load(rstream)
+    oldsave = {}
 
-        if oldsave is None:
-            oldsave = {}
+    # if there's old save, load it
+    if os.path.isfile(fn):
+        with open(fn, 'r') as rstream:
+            oldsave = yaml.load(rstream)
 
-        oldsave[id] = newobj
+            # save file was empty for some reason
+            if oldsave is None:
+                oldsave = {}
 
-    with open('document.yaml', 'w') as wstream:
+    oldsave[id] = newobj
+
+    # save the modified object
+    with open(fn, 'w') as wstream:
         yaml.dump(oldsave, wstream, default_flow_style=False)
 
     return 0
@@ -787,8 +804,10 @@ def main():
     # start with first item selected
     msel = 0
 
+    fn = sys.argv[1]
+
     # open file & set up screen
-    yamlobj = open_yaml(sys.argv[1])
+    yamlobj = open_yaml(fn)
     stdscr = init_curses()
 
     # top menu defaults
@@ -828,7 +847,7 @@ def main():
 
             # don't leave page unless ESC is pressed
             while psel != -1:
-                psel = draw_page(stdscr, get_objectcontent(yamlobj, mid), mid, get_title(yamlobj, mid), psel)
+                psel = draw_page(stdscr, fn, get_objectcontent(yamlobj, mid), mid, get_title(yamlobj, mid), psel)
 
         elif eltype == 'menu':
 
