@@ -43,6 +43,11 @@ he saves some data.
 All objects (`page`, `menu`, `checkbox`) should use unique IDs. Application uses IDs to navigate through the YAML
 structure. IDs are not visible in interface, only titles are.
 
+Application also supports validation of user input by custom scripts. Scripts can be defined in python file that
+uses same name as YAML file (eg. `page.py` if config file is `page.YAML`). Functions defined in `page.py` can
+be called when saving page (eg., `general_setup` calls `general_setup_validator`). These functions should accept
+dictionary as input parameter and optionally can return string which will be viewed in UI. See example `page.py`.
+
 ``` YAML
 ---
 menu: main_menu
@@ -52,6 +57,7 @@ content:
 
   - page: general_setup
     title: General setup
+    on_save: general_setup_validator
     content:
 
       - checkbox: cross_compiler_prefix
