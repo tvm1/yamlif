@@ -260,14 +260,14 @@ def draw_page(screen, fn, obj, pid, ptitle, msel):
         # this actually draws what is visible
         if 'checkbox' in elem:
             newelem = 'checkbox'
-            if elem['value'] is True:
+            if elem.get('value', False) is True:
                 win.addstr(i + offset, 1, '[*] ' + elem.get('title'), cl)
             else:
                 win.addstr(i + offset, 1, '[ ] ' + elem.get('title'), cl)
 
         elif 'radio' in elem:
             newelem = 'radio'
-            if elem['value'] is True:
+            if elem.get('value', False) is True:
                 win.addstr(i + offset, 1, '(*) ' + elem.get('title'), cl)
             else:
                 win.addstr(i + offset, 1, '( ) ' + elem.get('title'), cl)
@@ -767,7 +767,7 @@ def set_value(obj, msel, screen):
     # determine what object we try to change and act accordingly
     if 'checkbox' in obj[msel]:
 
-        if obj[msel]['value'] is False:
+        if obj[msel].get('value', False) is False:
             obj[msel]['value'] = True
         else:
             obj[msel]['value'] = False
