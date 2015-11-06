@@ -83,11 +83,15 @@ def draw_menu(screen, yamlobj, menu_titles, mtitle, msel):
     screen.refresh()
 
     # calculate minimal menu size to fit content and title
-    size_y = len(menu_titles) + 2
+    if len(menu_titles) < maxy - 4:
+        size_y = len(menu_titles) + 2
+    else:
+        size_y = maxy - 4
+
     size_x = max(len(max(menu_titles, key=len)), len(mtitle)) + 2
 
     # calculate position, so the menu is centered
-    pos_y = int(maxy / 2 - size_y / 2 - 1)
+    pos_y = int(maxy / 2 - size_y / 2)
     pos_x = int(maxx / 2 - size_x / 2)
 
     screen.addstr(0, 2, 'ENTER/SPACE: Enter/edit | ESC/BACKSP: Exit | R: Run commands | Q: Quit ',
@@ -105,27 +109,33 @@ def draw_menu(screen, yamlobj, menu_titles, mtitle, msel):
     # main loop that handles keyboard input and redrawing
     while True:
 
-        # print menu items
-        for i, mitem in enumerate(menu_titles):
-            mitem = mitem.ljust(size_x - 2)
-            if msel == i:
-                win.addstr(i + 1, 1, str(mitem), curses.color_pair(1))
+        lpos = 0
+
+        # we scrolled somewhere down
+        if msel > size_y - 3:
+            lpos = msel - size_y + 3
+
+        offset = lpos
+
+        # print the menu content
+        for i in range(1, size_y - 1):
+            mitem = menu_titles[lpos].ljust(size_x - 2)
+            if msel + 1 == i + offset:
+                win.addstr(i, 1, str(mitem), curses.color_pair(1))
             else:
-                win.addstr(i + 1, 1, str(mitem))
+                win.addstr(i, 1, str(mitem))
+
+            lpos += 1
 
         win.refresh()
         ckey = screen.getch()
 
         # read keys and redraw, return item index on ENTER, return -1 if leaving
         if ckey == curses.KEY_UP:
-            if msel == 0:
-                msel = len(menu_titles) - 1
-            else:
-                msel += -1
+            if msel > 0:
+                msel -= 1
         elif ckey == curses.KEY_DOWN:
-            if msel == len(menu_titles) - 1:
-                msel = 0
-            else:
+            if msel < len(menu_titles) - 1:
                 msel += 1
         elif ckey == curses.KEY_ENTER or ckey == 10 or ckey == ord(" "):
             del win
@@ -581,6 +591,7 @@ def run_commands(yamlobj):
     curses.cbreak()
     curses.curs_set(0)
     curses.mousemask(1)
+
 
 def save_yaml(fn, pid, obj):
     """
