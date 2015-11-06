@@ -224,7 +224,7 @@ def draw_page(screen, fn, obj, pid, ptitle, msel):
                 width = int(maxx / 2)
                 wrapped = textwrap.wrap(elem.get('value'), int(maxx / 2) - 2)
 
-                # if it's too long, we will truncate it to five line
+                # if it's too long, we will truncate it to five lines
                 if len(wrapped) > 4:
                     size_y += 5
                 else:
@@ -325,7 +325,7 @@ def draw_page(screen, fn, obj, pid, ptitle, msel):
             newelem = 'textarea'
 
             # title might be too long
-            tmptitle =  str(elem.get('title', ''))[0:int(size_x / 2)]
+            tmptitle = str(elem.get('title', ''))[0:int(size_x / 2)]
 
             # check if there's value at all, otherwise leave space blank
             if len(elem.get('value', '')) == 0:
@@ -664,6 +664,9 @@ def save_yaml(fn, pid, obj):
             nval = elem.get('value', "")
             newobj[nkey] = nval
 
+    # on_save here
+    # newobj
+
     oldsave = {}
 
     # if there's old save, load it
@@ -922,7 +925,8 @@ def main():
 
             # don't leave page unless ESC is pressed
             while psel != -1:
-                psel = draw_page(stdscr, fn, get_objectcontent(yamlobj, mid), mid, get_title(yamlobj, mid), psel)
+                psel = draw_page(stdscr, fn, get_objectcontent(yamlobj, mid), mid, get_title(yamlobj, mid),
+                                 psel)
 
         elif eltype == 'menu':
 
