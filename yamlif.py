@@ -368,7 +368,8 @@ def draw_page(screen, yamlobj, fn, obj, pid, ptitle, msel):
                 offset += 1
 
     win.attroff(curses.A_BOLD)
-    win.refresh()
+    win.noutrefresh()
+    curses.doupdate()
 
     ckey = screen.getch()
 
@@ -404,8 +405,6 @@ def draw_page(screen, yamlobj, fn, obj, pid, ptitle, msel):
         msel = -1
 
     del win
-    screen.touchwin()
-    screen.refresh()
     return msel
 
 
