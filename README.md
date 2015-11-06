@@ -41,7 +41,7 @@ dictionary as input parameter and optionally can return string which will be vie
 
 Please note that values currently modified by these external functions are reflected only in the save file (not in UI).
 
-# page.yaml example
+## page.yaml example
 
 ``` YAML
 ---
