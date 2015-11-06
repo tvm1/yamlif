@@ -582,12 +582,12 @@ def run_commands(yamlobj):
     curses.curs_set(0)
     curses.mousemask(1)
 
-def save_yaml(fn, id, obj):
+def save_yaml(fn, pid, obj):
     """
     This function saves values to YAML file.
 
     :param fn: Filename of input file.
-    :param id: Page ID.
+    :param pid: Page ID.
     :param obj: Python object ( nested lists / dicts ).
     :return: Exit status.
     """
@@ -635,7 +635,7 @@ def save_yaml(fn, id, obj):
             if oldsave is None:
                 oldsave = {}
 
-    oldsave[id] = newobj
+    oldsave[pid] = newobj
 
     # save the modified object
     with open(fn, 'w') as wstream:
