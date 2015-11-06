@@ -188,3 +188,17 @@ content:
 
           - checkbox: idt_cps_gen2
             title: IDT CPS Gen.2 SRIO switch support
+
+  - page: ssh_keys
+    title: SSH keys
+    content:
+
+      - textdisplay: warn_ssh
+        value: Please insert your SSH keys below.
+
+      - textarea: ssh_1
+        title: SSH key 1
+
+      - textarea: ssh_2
+        title: SSH key 2
+
