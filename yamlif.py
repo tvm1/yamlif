@@ -7,7 +7,6 @@ import curses
 import curses.textpad
 import textwrap
 import re
-import subprocess
 
 try:
     import yaml
@@ -598,6 +597,21 @@ def open_yaml(yfile):
         return yamlobj
 
 
+def load_service_functions(fn, globs):
+    """
+    This function imports service functions if they are present.
+
+    :return: 0 if success, else 1
+    """
+
+    fn = re.sub('.yaml$', '.py', fn)
+
+    if os.path.isfile(fn):
+        exec(compile(open(fn).read(), fn, 'exec'), globs)
+        return 0
+    else:
+        return 1
+
 def run_commands(yamlobj):
     """
     Runs commands stored in YAML
@@ -886,6 +900,11 @@ def main():
 
     # open file & set up screen
     yamlobj = open_yaml(fn)
+
+    # try to load service functions
+    load_service_functions(fn, globals())
+
+    # initialize curses
     stdscr = init_curses()
 
     # top menu defaults
