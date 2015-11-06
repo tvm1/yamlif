@@ -1,7 +1,7 @@
 ---
 menu: main_menu
 title: Example configuration menu
-commands: echo "This can contain arbitary shell command or execute a script (eg., ./script.sh)"
+commands: echo "This can contain arbitary shell command or script (eg., ./script.sh)"
 content:
 
   - page: general_setup
