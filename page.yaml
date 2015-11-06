@@ -93,8 +93,8 @@ content:
       - checkbox: ext_4_debug
         title: Ext4 debugging support
 
-      - textbox: nls_option
-        title: Default NLS option
+      - textdisplay: nls_option
+        value: Please select default NLS below.
 
       - radio: nls_utf8
         title: NLS UTF8
