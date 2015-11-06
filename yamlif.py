@@ -324,21 +324,24 @@ def draw_page(screen, fn, obj, pid, ptitle, msel):
         elif 'textarea' in elem:
             newelem = 'textarea'
 
+            # title might be too long
+            tmptitle =  str(elem.get('title', ''))[0:int(size_x / 2)]
+
             # check if there's value at all, otherwise leave space blank
-            if 'value' not in elem:
-                win.addstr(i + offset, 1, str(elem.get('title')) + ": ", cl)
-                win.addstr(i + offset + 1, 1, str(elem.get('title')) + ": ", cl)
-                offset += 2
+            if len(elem.get('value', '')) == 0:
+                win.addstr(i + offset, 1, tmptitle + ": ", cl)
+                offset += 1
             elif 'value' in elem:
-                textlist = textwrap.wrap(elem.get('value'), size_x - 4 - len(elem.get('title')))
+                textlist = textwrap.wrap(elem.get('value'), size_x - 4 - len(tmptitle))
 
                 for j, ln in enumerate(textlist):
                     if j == 0:
-                        win.addstr(i + offset, 1, str(elem.get('title')) + ": " + str(ln), cl)
+                        win.addstr(i + offset, 1, tmptitle + ": " + str(ln), cl)
                         offset += 1
                     if j == 1:
                         ln = re.sub('.............$', '... [wrapped]', ln)
-                        win.addstr(i + offset, 1 + len(elem.get('title')) + 2, str(ln), cl)
+                        win.addstr(i + offset, 1 + len(tmptitle) + 2, str(ln), cl)
+                        # offset += 1
                         break
 
         elif 'textdisplay' in elem:
