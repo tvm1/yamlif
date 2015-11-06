@@ -392,7 +392,7 @@ def draw_page(screen, yamlobj, fn, obj, pid, ptitle, msel):
         exval, log = save_yaml(fn, yamlobj, pid, obj)
 
         # print on_save log if available
-        if isinstance(log, list):
+        if len(log) != 0:
             draw_popup(screen, log)
 
         # give user some feedback
@@ -687,6 +687,8 @@ def save_yaml(fn, yamlobj, pid, obj):
 
     # fetch save function, if available
     save_func = get_save_function(yamlobj, pid)
+
+    log = ""
 
     # if the function is available, call it and pass the dict
     if save_func in globals():
