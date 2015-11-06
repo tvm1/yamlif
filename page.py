@@ -1,5 +1,6 @@
 # This is example file that processes some values from general_setup page
-# when user saves the page. A string can be returned back to
+# when user saves the page. A string can be returned back to UI and will be
+# viewable as popup.
 
 
 def general_setup_validator(values):
