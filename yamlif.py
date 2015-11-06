@@ -251,6 +251,10 @@ def draw_page(screen, fn, obj, pid, ptitle, msel):
         draw_popup(screen, 'Page is way too large to view.')
         return -1
 
+    # page would be too wide
+    if size_x > maxx - 4:
+        size_x = maxx - 4
+
     # calculate position, so the page is centered
     pos_y = int(maxy / 2 - size_y / 2)
     pos_x = int(maxx / 2 - size_x / 2)
@@ -283,17 +287,18 @@ def draw_page(screen, fn, obj, pid, ptitle, msel):
         # this actually draws what is visible
         if 'checkbox' in elem:
             newelem = 'checkbox'
+
             if elem.get('value', False) is True:
-                win.addstr(i + offset, 1, '[*] ' + elem.get('title'), cl)
+                win.addstr(i + offset, 1, '[*] ' + elem.get('title', '')[0:size_x - 6], cl)
             else:
-                win.addstr(i + offset, 1, '[ ] ' + elem.get('title'), cl)
+                win.addstr(i + offset, 1, '[ ] ' + elem.get('title', '')[0:size_x - 6], cl)
 
         elif 'radio' in elem:
             newelem = 'radio'
             if elem.get('value', False) is True:
-                win.addstr(i + offset, 1, '(*) ' + elem.get('title'), cl)
+                win.addstr(i + offset, 1, '(*) ' + elem.get('title', '')[0:size_x - 6], cl)
             else:
-                win.addstr(i + offset, 1, '( ) ' + elem.get('title'), cl)
+                win.addstr(i + offset, 1, '( ) ' + elem.get('title', '')[0:size_x - 6], cl)
 
         elif 'textbox' in elem:
             newelem = 'textbox'
@@ -304,9 +309,17 @@ def draw_page(screen, fn, obj, pid, ptitle, msel):
             else:
                 # so truncate it to fit the screen
                 spc = size_x - len(str(elem.get('title'))) - 4
-                ln = elem.get('value', ' ')[0:spc]
+
+                # title is really long, truncate it
+                if spc <= 0:
+                    tmptitle = elem.get('title')[0:int(size_x / 2)] + "..."
+                    spc = size_x - len(tmptitle) - 4
+                else:
+                    tmptitle = elem.get('title')
+
+                ln = str(elem.get('value', ' '))[0:spc]
                 ln = re.sub('...............$', '... [truncated]', ln)
-                win.addstr(i + offset, 1, elem.get('title') + ": " + str(ln), cl)
+                win.addstr(i + offset, 1, tmptitle + ": " + str(ln), cl)
 
         elif 'textarea' in elem:
             newelem = 'textarea'
