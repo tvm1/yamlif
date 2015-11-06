@@ -167,11 +167,12 @@ def draw_menu(screen, yamlobj, menu_titles, mtitle, msel):
     screen.refresh()
 
 
-def draw_page(screen, fn, obj, pid, ptitle, msel):
+def draw_page(screen, yamlobj, fn, obj, pid, ptitle, msel):
     """
     This functions draws page and its content.
 
     :param screen: Curses screen object.
+    :param yamlobj: Whole python object ( nested list / dicts ).
     :param fn: Filename of input file.
     :param obj: Python object ( nested list / dicts ).
     :param pid: Page id.
@@ -388,7 +389,7 @@ def draw_page(screen, fn, obj, pid, ptitle, msel):
     elif ckey == curses.KEY_ENTER or ckey == 10 or ckey == ord(" "):
         set_value(obj, msel, screen)
     elif ckey == ord("s") or ckey == ord("S"):
-        exval = save_yaml(fn, pid, obj)
+        exval = save_yaml(fn, yamlobj, pid, obj)
 
         # give user some feedback
         if exval == 0:
@@ -612,6 +613,7 @@ def load_service_functions(fn, globs):
     else:
         return 1
 
+
 def run_commands(yamlobj):
     """
     Runs commands stored in YAML
@@ -636,11 +638,12 @@ def run_commands(yamlobj):
     curses.mousemask(1)
 
 
-def save_yaml(fn, pid, obj):
+def save_yaml(fn, yamlobj, pid, obj):
     """
     This function saves values to YAML file.
 
     :param fn: Filename of input file.
+    :param yamlobj: Whole Python object ( nested lists / dicts ).
     :param pid: Page ID.
     :param obj: Python object ( nested lists / dicts ).
     :return: Exit status.
@@ -678,8 +681,8 @@ def save_yaml(fn, pid, obj):
             nval = elem.get('value', "")
             newobj[nkey] = nval
 
-    # on_save here
-    # newobj
+    # fetch save function, if available
+    save_func = get_save_function(yamlobj, pid)
 
     oldsave = {}
 
@@ -783,6 +786,34 @@ def get_title(obj, objid):
         for elem in obj:
             if isinstance(elem, list) or isinstance(elem, dict):
                 retval = get_title(elem, objid)
+                if retval is not None:
+                    result = retval
+    return result
+
+
+def get_save_function(obj, objid):
+    """
+    Returns on_save function name the object with given ID.
+
+    :param obj: Structure containing YAML object ( nested lists / dictionaries ).
+    :param objid: YAML ID of given page.
+    :return: Name of onsave function.
+    """
+
+    result = None
+
+    if isinstance(obj, dict):
+        for key, val in obj.items():
+            if val == objid:
+                result = obj.get('on_save', '')
+            elif isinstance(val, list) or isinstance(val, dict):
+                retval = get_save_function(val, objid)
+                if retval is not None:
+                    result = retval
+    elif isinstance(obj, list):
+        for elem in obj:
+            if isinstance(elem, list) or isinstance(elem, dict):
+                retval = get_save_function(elem, objid)
                 if retval is not None:
                     result = retval
     return result
@@ -944,7 +975,7 @@ def main():
 
             # don't leave page unless ESC is pressed
             while psel != -1:
-                psel = draw_page(stdscr, fn, get_objectcontent(yamlobj, mid), mid, get_title(yamlobj, mid),
+                psel = draw_page(stdscr, yamlobj, fn, get_objectcontent(yamlobj, mid), mid, get_title(yamlobj, mid),
                                  psel)
 
         elif eltype == 'menu':
