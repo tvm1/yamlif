@@ -389,7 +389,11 @@ def draw_page(screen, yamlobj, fn, obj, pid, ptitle, msel):
     elif ckey == curses.KEY_ENTER or ckey == 10 or ckey == ord(" "):
         set_value(obj, msel, screen)
     elif ckey == ord("s") or ckey == ord("S"):
-        exval = save_yaml(fn, yamlobj, pid, obj)
+        exval, log = save_yaml(fn, yamlobj, pid, obj)
+
+        # print on_save log if available
+        if isinstance(log, list):
+            draw_popup(screen, log)
 
         # give user some feedback
         if exval == 0:
@@ -684,6 +688,11 @@ def save_yaml(fn, yamlobj, pid, obj):
     # fetch save function, if available
     save_func = get_save_function(yamlobj, pid)
 
+    # if the function is available, call it and pass the dict
+    if save_func in globals():
+        save_func += '(newobj)'
+        log = eval(save_func)
+
     oldsave = {}
 
     # if there's old save, load it
@@ -701,7 +710,7 @@ def save_yaml(fn, yamlobj, pid, obj):
     with open(fn, 'w') as wstream:
         yaml.dump(oldsave, wstream, default_flow_style=False)
 
-    return 0
+    return 0, log
 
 
 def get_menulist(yamlobj, root=False):
@@ -805,7 +814,7 @@ def get_save_function(obj, objid):
     if isinstance(obj, dict):
         for key, val in obj.items():
             if val == objid:
-                result = obj.get('on_save', '')
+                result = obj.get('on_save')
             elif isinstance(val, list) or isinstance(val, dict):
                 retval = get_save_function(val, objid)
                 if retval is not None:
