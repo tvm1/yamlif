@@ -1,19 +1,17 @@
 ## YAMLIF
 
 YAML InterFace is application that provides user friendly menu hierarchy based on predefined YAML file. User can
-traverse the menu hierarchy and edit predefined values. Selected values are saved for further usage.
-
-## License
-
-MIT
+traverse the menu hierarchy and edit predefined values. Selected values are saved for further usage. 
 
 ## Overview
 
-Interface structure is defined in YAML file. YAML definition file has two basic elements - menu and page. Menu
-should contain another menu or submenu. Pages are saved selectively by user into separate file once user presses
-S key on the given page. 
+Menu hierarchy is specified in YAML file. Basic element is page. Multiple pages can be contained in common menu.
+Every page can be selectively saved by the user. Page can have optional on_save binding that is called on the selected
+dataset. Such binding can modify values in the dataset and output text or result back to the user interface. Whole menu
+hierarchy has one final DONE function that can execute predefined external commands with access to values that were
+set by the user.
 
-Single page can contain any of following elements:
+Single page can contain one of following elements:
 
 - Checkboxes
 - Radio buttons
@@ -21,56 +19,125 @@ Single page can contain any of following elements:
 - Text area (can contain arbitary value)
 - Text display (read only)
 
-## TODO
+## Menu definition file
 
-- Page scrolling
-- Source file validation
+See example below.
 
-## Some YAML examples
-
-### Basic menu structure
-
-Example below defines top menu with title (which should be always present) that contains one page `general_setup` and
-one submenu `bus_opts`. Page general_setup  contains checkbox `cross_compiler_prefix` that is checked by default and
-textbox `kernel_log_buffer` that has default value `64`. Submenu `bus_opts` contains page `pci_access_mode` that
-contains a read-only textdisplay element `warning_pci` that is viewable by user. Below the textdisplay there's group
-of radiobuttons and one of them is enabled.
-
-``` YAML
+``` yaml
 ---
 menu: main_menu
-title: Example configuration menu
-commands: dmesg; read bar
+title: Welcome to main menu!
 content:
 
-  - page: general_setup
-    title: General setup
+  - menu: first_menu
+    title: This is first menu!
     content:
 
-      - checkbox: cross_compiler_prefix
-        title: Cross-compiler tool prefix
-        value: True
-        
-      - textbox: kernel_log_buffer
-        title: Kernel log buffer size
-        value: 64
-
-
-  - menu: bus_opts
-    title: BUS options (PCI. etc.)
-    content:
-
-      - page: pci_access_mode
-        title: PCI access mode
+      - menu: first_submenu
+        title: And this is first submenu.
         content:
+          - page: first_page
+            title: This is first page.
+            persistence: True
+            content:
+              - checkbox: my_setting_1
+                title: Test setting 1
+                value: False
+              - checkbox: my_setting_2
+                title: Test setting 2
+                value: True
+              - radio: radio_211
+                title: Test radiobutton 211
+                value: False
+              - radio: radio_222
+                title: Test radiobutton 222
+                value: True
+              - radio: radio_333
+                title: Test radiobutton 333
+                value: False
+              - textbox: value_500
+                title: Text value 500
+              - textbox: value_501
+                title: Text value 501
+              - textbox: value_502
+                title: Text value 502
+              - textarea: text_area_101
+                title: Text area 101
+                length: 20
+              - textarea: text_area_102
+                title: Text area 102
+                length: 15
+              - textdisplay: warning_1
+                title: Warning!
+                content: >
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                  Pellentesque molestie non tellus nec ultrices. Duis quis ipsum vitae urna pellentesque congue.
+                  Phasellus at ipsum iaculis, sollicitudin orci ac, tincidunt augue. Nunc facilisis, odio ut
+                  tincidunt vestibulum, urna lacus pretium velit, quis iaculis magna arcu a arcu. Nunc ullamcorper
+                  turpis ut purus malesuada luctus. Quisque facilisis elit at finibus laoreet. Aenean non condimentum
+                  augue. Nulla vehicula imperdiet dolor ac malesuada. Morbi at diam nunc. Cras fermentum vehicula
+                  scelerisque.
 
-          - textdisplay: warning_pci
-            value: Be careful when changing this value. Default is ANY.
+      - menu: second_submenu
+        title: And this is second submenu.
+        content:
+          - page: sixth_page
+            title: This is sixth page.
+            persistence: False
+            content:
+              - radio: radio_11
+                title: Test radiobutton 1
+                value: False
+              - radio: radio_22
+                title: Test radiobutton 2
+                value: True
 
-          - radio: BIOS
-            title: BIOS
+  - menu: second_menu
+    title: This will be second menu.
+    content:
+      - page: second_page
+        title: Second page here.
+        persistence: False
+        content:
+          - textbox: value_1
+            title: Text value 1
+          - textbox: value_2
+            title: Text value 2
+          - textbox: value_3
+            title: Text value 3
 
-          - radio: ANY
-            title: ANY
-            value: True
+  - page: third_page
+    title: Third page.
+    persistence: True
+    content:
+      - checkbox: some_other_value_1
+        title: Check me!
+        value: False
+
+  - menu: third_menu
+    title: Third menu.
+    content:
+      - page: fourth_page
+        title: Fourth page here.
+        persistence: True
+        content:
+          - textarea: text_area_10
+            title: First text area
+            length: 20
+          - textarea: text_area_20
+            title: Second text area
+            length: 15
+
+  - page: fifth_page
+    title: The last, fifth page.
+    persistence: False
+    content:
+      - textdisplay: warning_1
+        title: Very long text.
+        content: >
+          This
+          is
+          very
+          long
+          text.
 ```
