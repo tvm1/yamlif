@@ -181,9 +181,6 @@ def draw_page(screen, yamlobj, fn, obj, pid, ptitle, msel):
     :return: Position of currently selected page element.
     """
 
-    screen.touchwin()
-    screen.refresh()
-
     maxy, maxx = screen.getmaxyx()
 
     # something to begin with, fit at least page title
