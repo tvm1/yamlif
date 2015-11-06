@@ -309,7 +309,7 @@ def draw_page(screen, fn, obj, pid, ptitle, msel):
             newelem = 'textdisplay'
 
             # wrapping is handled here
-            textlist = textwrap.wrap(elem.get('value'), size_x - 2)
+            textlist = textwrap.wrap(elem.get('value', ''), size_x - 2)
 
             # print whatever is in content of textdisplay
             for j, ln in enumerate(textlist):
@@ -322,7 +322,9 @@ def draw_page(screen, fn, obj, pid, ptitle, msel):
 
                 # print current line
                 win.addstr(i + offset, 1, str(ln), cl)
-                offset += 1
+
+                if j + 1 < len(textlist):
+                    offset += 1
 
         # element has changed, add blank line
         if elem != obj[-1]:
