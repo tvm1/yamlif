@@ -3,7 +3,6 @@
 
 
 def general_setup_validator(values):
-    log = "Validator: "
 
     if values['sys_v_ipc'] is True:
         values['sys_v_ipc'] = False
