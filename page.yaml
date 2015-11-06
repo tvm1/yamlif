@@ -5,6 +5,7 @@ commands: echo "This can contain arbitary shell command or script (eg., ./script
 content:
 
   - page: general_setup
+    on_save: general_setup_validator
     title: General setup
     content:
 
