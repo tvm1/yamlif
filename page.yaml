@@ -1,183 +1,190 @@
 ---
 menu: main_menu
-title: Welcome to main menu!
+title: Example configuration menu
 commands: dmesg; read bar
 content:
 
-  - menu: first_menu
-    title: This is first menu!
+  - page: general_setup
+    title: General setup
     content:
 
-      - menu: first_submenu
-        title: And this is first submenu.
+      - checkbox: cross_compiler_prefix
+        title: Cross-compiler tool prefix
+        value: True
+
+      - checkbox: anon_mem_swap
+        title: Support for paging of anonymous memory (swap)
+
+      - checkbox: sys_v_ipc
+        title: System V IPC
+
+      - checkbox: posix_msg_queues
+        title: POSIX Message queues
+
+      - checkbox: process_vm_readv
+        title: Enable process_vm_readv/writev syscalls
+
+      - checkbox: fhandle_syscalls
+        title: Open by fhandle syscalls
+        value: True
+
+      - checkbox: chpoint_restore
+        title: Checkpoint/restore support
+
+      - checkbox: gr_scheduling
+        title: Automatic process group scheduling
+
+      - checkbox: aio_support
+        title: Enable AIO support
+        value: True
+
+      - checkbox: skey_selftest
+        title: Static key selftest (NEW)
+        value: True
+
+      - checkbox: pci_quirk_workarounds
+        title: Enable PCI quirk workarounds
+
+      - textbox: kernel_log_buffer
+        title: Kernel log buffer size
+        value: 64
+
+      -  textbox: cpu_kernel_log_buffer
+         title: CPU kernel log buffer size contribution
+         value: 16
+
+      - checkbox: dev_contr_cgroups
+        title: Device controller for cgroups
+
+      - checkbox: blk_io_debug
+        title: Enable Block IO controller debugging
+
+  - page: fs_support
+    title: File systems
+    content:
+
+      - checkbox: ext_2
+        title: Second extended fs support
+        value: True
+
+      - checkbox: ext_3
+        title:  The Extended 3 (ext3) filesystem
+        value: True
+
+      - checkbox: ext_4
+        title: The Extended 4 (ext4) filesystem
+
+      - checkbox: ext_for_ext2
+        title: Use ext4 for ext2 file systems
+
+      - checkbox: ext_4_enc
+        title: Ext4 Encryption (new)
+
+      - checkbox: reiser_fs_support
+        title: ReiserFS support
+        value: True
+
+      - textdisplay: warning_fs
+        value: Only enable this if you know what you are doing.
+
+      - checkbox: reiserfs_debug
+        title: ReiserFS debug support
+
+      - checkbox: ext_4_debug
+        title: Ext4 debugging support
+
+      - textbox: nls_option
+        title: Default NLS option
+
+      - radio: nls_utf8
+        title: NLS UTF8
+        value: True
+
+      - radio: nls_8859-2
+        title: NLS ISO 8859-2 (Latin 2)
+
+      - radio: nls_8859-3
+        title: NLS ISO 8859-3 (Latin 3)
+
+      - radio: nls_8859-4
+        title: NLS ISO 8859-4 (Latin 4)
+
+  - page: sec_options
+    title: Security options
+    content:
+
+      - checkbox: eac_retention
+        title: Enable access key retention support
+        value: True
+
+      - checkbox: per_uid_keyrings
+        title: Enable register of persistent per-UID keyrings
+
+      - checkbox: large_payload
+        title: Large payload keys
+        value: True
+
+      - checkbox: kern_syslog_acc
+        title: Restrict unprivileged access to kernel syslog
+
+      - checkbox: dif_sec_models
+        title: Enable different security models
+
+      - checkbox: nsa_selinux_support
+        title: NSA SELinux support
+
+      - textbox: def_max_count_learn
+        title: Default maximal count for learning mode
+        value: 2048
+
+      - textbox: def_max_count_audit
+        title: Default maximal count for audit log
+        value: 1024
+
+      - checkbox: int_audit_support
+        title: Enable integrity auditing support
+        value: True
+
+      - checkbox: add_smack_xattrs
+        title: Additional SMACK xattrs (NEW)
+
+  - menu: bus_opts
+    title: BUS options (PCI. etc.)
+    content:
+
+      - page: pci_access_mode
+        title: PCI access mode
         content:
-          - page: first_page
-            title: This is first page.
-            persistence: True
-            content:
-              - checkbox: my_setting_1
-                title: Test setting 1
-                value: False
-              - checkbox: my_setting_2
-                title: Test setting 2
-                value: True
-              - radio: radio_211
-                title: Test radiobutton 211
-                value: False
-              - radio: radio_222
-                title: Test radiobutton 222
-                value: True
-              - radio: radio_333
-                title: Test radiobutton 333
-                value: False
-              - textbox: value_500
-                title: Text value 500
-              - textbox: value_501
-                value: Some random value
-                title: Text value 501
-              - textbox: value_502
-                title: Text value 502
-                value: 28
-              - textarea: text_area_101
-                title: Text area 101
-                value: >
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Pellentesque molestie non tellus nec ultrices. Duis quis ipsum vitae urna pellentesque congue.
-                  Phasellus at ipsum iaculis, sollicitudin orci ac, tincidunt augue. Nunc facilisis, odio ut
-                  tincidunt vestibulum, urna lacus pretium velit, quis iaculis magna arcu a arcu. Nunc ullamcorper
-                  turpis ut purus malesuada luctus. Quisque facilisis elit at finibus laoreet. Aenean non condimentum
-                  augue. Nulla vehicula imperdiet dolor ac malesuada. Morbi at diam nunc. Cras fermentum vehicula
-                  scelerisque.
-              - checkbox: my_setting_234
-                title: Another checkbox
-                value: False
-              - textdisplay: warning_1
-                title: Warning!
-                value: >
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Pellentesque molestie non tellus nec ultrices. Duis quis ipsum vitae urna pellentesque congue.
-                  Phasellus at ipsum iaculis, sollicitudin orci ac, tincidunt augue. Nunc facilisis, odio ut
-                  tincidunt vestibulum, urna lacus pretium velit, quis iaculis magna arcu a arcu. Nunc ullamcorper
-                  turpis ut purus malesuada luctus. Quisque facilisis elit at finibus laoreet. Aenean non condimentum
-                  augue. Nulla vehicula imperdiet dolor ac malesuada. Morbi at diam nunc. Cras fermentum vehicula
-                  scelerisque.
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Pellentesque molestie non tellus nec ultrices. Duis quis ipsum vitae urna pellentesque congue.
-                  Phasellus at ipsum iaculis, sollicitudin orci ac, tincidunt augue. Nunc facilisis, odio ut
-                  tincidunt vestibulum, urna lacus pretium velit, quis iaculis magna arcu a arcu. Nunc ullamcorper
-                  turpis ut purus malesuada luctus. Quisque facilisis elit at finibus laoreet. Aenean non condimentum
-                  augue. Nulla vehicula imperdiet dolor ac malesuada. Morbi at diam nunc. Cras fermentum vehicula
-                  scelerisque.
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Pellentesque molestie non tellus nec ultrices. Duis quis ipsum vitae urna pellentesque congue.
-                  Phasellus at ipsum iaculis, sollicitudin orci ac, tincidunt augue. Nunc facilisis, odio ut
-                  tincidunt vestibulum, urna lacus pretium velit, quis iaculis magna arcu a arcu. Nunc ullamcorper
-                  turpis ut purus malesuada luctus. Quisque facilisis elit at finibus laoreet. Aenean non condimentum
-                  augue. Nulla vehicula imperdiet dolor ac malesuada. Morbi at diam nunc. Cras fermentum vehicula
-                  scelerisque.
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Pellentesque molestie non tellus nec ultrices. Duis quis ipsum vitae urna pellentesque congue.
-                  Phasellus at ipsum iaculis, sollicitudin orci ac, tincidunt augue. Nunc facilisis, odio ut
-                  tincidunt vestibulum, urna lacus pretium velit, quis iaculis magna arcu a arcu. Nunc ullamcorper
-                  turpis ut purus malesuada luctus. Quisque facilisis elit at finibus laoreet. Aenean non condimentum
-                  augue. Nulla vehicula imperdiet dolor ac malesuada. Morbi at diam nunc. Cras fermentum vehicula
-                  scelerisque.
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Pellentesque molestie non tellus nec ultrices. Duis quis ipsum vitae urna pellentesque congue.
-                  Phasellus at ipsum iaculis, sollicitudin orci ac, tincidunt augue. Nunc facilisis, odio ut
-                  tincidunt vestibulum, urna lacus pretium velit, quis iaculis magna arcu a arcu. Nunc ullamcorper
-                  turpis ut purus malesuada luctus. Quisque facilisis elit at finibus laoreet. Aenean non condimentum
-                  augue. Nulla vehicula imperdiet dolor ac malesuada. Morbi at diam nunc. Cras fermentum vehicula
-                  scelerisque.
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Pellentesque molestie non tellus nec ultrices. Duis quis ipsum vitae urna pellentesque congue.
-                  Phasellus at ipsum iaculis, sollicitudin orci ac, tincidunt augue. Nunc facilisis, odio ut
-                  tincidunt vestibulum, urna lacus pretium velit, quis iaculis magna arcu a arcu. Nunc ullamcorper
-                  turpis ut purus malesuada luctus. Quisque facilisis elit at finibus laoreet. Aenean non condimentum
-                  augue. Nulla vehicula imperdiet dolor ac malesuada. Morbi at diam nunc. Cras fermentum vehicula
-                  scelerisque.
-              - textbox: value_600
-                value: Value!
-                title: Text value ABC
-              - textbox: value_601
-                value: Very random.
-                title: Text value DEF
-              - textbox: value_602
-                title: Text value GHI
-                value: 2855
 
-      - menu: second_submenu
-        title: And this is second submenu.
+          - textdisplay: warning_pci
+            value: Be careful when changing this value. Default is ANY.
+
+          - radio: BIOS
+            title: BIOS
+
+          - radio: MMCONFIG
+            title: MMCONFIG
+
+          - radio: DIRECT
+            title: DIRECT
+
+          - radio: ANY
+            title: ANY
+            value: True
+
+      - page: rapid_io_switch
+        title: RapidIO switch drivers
         content:
-          - page: sixth_page
-            title: This is sixth page.
-            persistence: False
-            content:
-              - radio: radio_11
-                title: Test radiobutton 1
-                value: False
-              - radio: radio_22
-                title: Test radiobutton 2
-                value: False
-              - radio: radio_32
-                title: Test radiobutton 3
-                value: False
-              - radio: radio_42
-                title: Test radiobutton 4
-                value: True
-              - textdisplay: warning_1
-                title: Warning!
-                value: >
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Pellentesque molestie non tellus nec ultrices. Duis quis ipsum vitae urna pellentesque congue.
 
+          - checkbox: idt_tsi_57
+            title: IDT Tsi57x SRIO switches support
 
-  - menu: second_menu
-    title: This will be second menu.
-    content:
-      - page: second_page
-        title: Second page here.
-        persistence: False
-        content:
-          - textbox: value_1
-            title: Text value 1
-          - textbox: value_2
-            title: Text value 2
-          - textbox: value_3
-            title: Another random value 3
-            value: I have default value.
+          - checkbox: idt_cps_xx
+            title: IDT CPS-xx SRIO switches support
 
-  - page: third_page
-    title: Third page.
-    persistence: True
-    content:
-      - checkbox: some_other_value_1
-        title: Check me!
-        value: False
+          - checkbox: idt_tsi_568
+            title: Tsi568 SRIO switch support
+            value: True
 
-  - menu: third_menu
-    title: Third menu.
-    content:
-      - page: fourth_page
-        title: Fourth page here.
-        persistence: True
-        content:
-          - textarea: text_area_10
-            title: First text area
-            value: Values here.
-          - textarea: text_area_20
-            title: Second text area
-            value: Values here too.
-
-  - page: fifth_page
-    title: The last, fifth page.
-    persistence: False
-    content:
-      - textdisplay: warning_1
-        title: Very long text.
-        value: >
-          This
-          is
-          very
-          long
-          text.
+          - checkbox: idt_cps_gen2
+            title: IDT CPS Gen.2 SRIO switch support
