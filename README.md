@@ -31,14 +31,17 @@ Single page can contain any of following elements:
 ### Basic menu structure
 
 Example below defines top menu with title (which should be always present) that contains one page `general_setup` and
-one submenu `bus_opts`. Page general_setup  contains checkbox `cross_compiler_prefix` that is checked by default and
+one submenu `bus_opts`. Page `general_setup ` contains checkbox `cross_compiler_prefix` that is checked by default and
 textbox `kernel_log_buffer` that has default value `64`. Submenu `bus_opts` contains page `pci_access_mode` that
 contains a read-only textdisplay element `warning_pci` that is viewable by user. Below the textdisplay there's group
 of radiobuttons and one of them is enabled.
 
 YAML file can have predefined shell command that can be executed with R key from menu. Name of command or script
-is defined in top menu. This is mostly useful when user wants to do certain external action after he saves some data.
+is defined in top menu with `commands` key. This is mostly useful when user wants to do certain external action after
+he saves some data.
 
+All objects (`page`, `menu`, `checkbox`) should use unique IDs. Application uses IDs to navigate through the YAML
+structure. IDs are not visible in interface, only titles are.
 
 ``` YAML
 ---
