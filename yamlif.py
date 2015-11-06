@@ -574,6 +574,8 @@ def run_commands(yamlobj):
     commands = (yamlobj.get('commands'))
     os.system(commands)
 
+    input("Press ENTER to continue ... l")
+
     # reinit stuff back
     curses.noecho()
     curses.cbreak()
