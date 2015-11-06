@@ -21,15 +21,6 @@ Single page can contain any of following elements:
 - Text area (can contain arbitary value)
 - Text display (read only)
 
-## TODO
-
-- Page scrolling
-- Source file validation
-
-## Some YAML examples
-
-### Basic menu structure
-
 Example below defines top menu with title (which should be always present) that contains one page `general_setup` and
 one submenu `bus_opts`. Page `general_setup ` contains checkbox `cross_compiler_prefix` that is checked by default and
 textbox `kernel_log_buffer` that has default value `64`. Submenu `bus_opts` contains page `pci_access_mode` that
@@ -49,6 +40,8 @@ be called when saving page (eg., `general_setup` calls `general_setup_validator`
 dictionary as input parameter and optionally can return string which will be viewed in UI. See example `page.py`.
 
 Please note that values currently modified by these external functions are reflected only in the save file (not in UI).
+
+# page.yaml example
 
 ``` YAML
 ---
