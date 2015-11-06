@@ -82,13 +82,22 @@ def draw_menu(screen, yamlobj, menu_titles, mtitle, msel):
     screen.border()
     screen.refresh()
 
-    # calculate minimal menu size to fit content and title
+    # calculate minimal menu height
     if len(menu_titles) < maxy - 4:
         size_y = len(menu_titles) + 2
     else:
         size_y = maxy - 4
 
+    # calculate minimal menu width to fit content and title
     size_x = max(len(max(menu_titles, key=len)), len(mtitle)) + 2
+
+    # some titles are too large
+    if size_x > maxx - 4:
+        size_x = maxx - 4
+
+    # trim title if too long to fit
+    if len(mtitle) > size_x - 2:
+        mtitle = mtitle[0:size_x - 2]
 
     # calculate position, so the menu is centered
     pos_y = int(maxy / 2 - size_y / 2)
@@ -120,6 +129,10 @@ def draw_menu(screen, yamlobj, menu_titles, mtitle, msel):
         # print the menu content
         for i in range(1, size_y - 1):
             mitem = menu_titles[lpos].ljust(size_x - 2)
+
+            if len(mitem) > size_x - 2:
+                mitem = mitem[0:size_x - 5] + "..."
+
             if msel + 1 == i + offset:
                 win.addstr(i, 1, str(mitem), curses.color_pair(1))
             else:
