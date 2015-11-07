@@ -7,6 +7,8 @@ traverse the menu hierarchy and edit predefined values. Selected values are save
 
 MIT
 
+This project also includes MIT-licensed `py_curses_editor` written by Scott Hansen. See `LICENSE-editor.md` for license.
+
 ## Overview
 
 Interface structure is defined in YAML file. YAML definition file has two basic elements - menu and page. Menu
