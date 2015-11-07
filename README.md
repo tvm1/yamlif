@@ -41,8 +41,6 @@ uses same name as YAML file (eg. `page.py` if config file is `page.YAML`). Funct
 be called when saving page (eg., `general_setup` calls `general_setup_validator`). These functions should accept
 dictionary as input parameter and optionally can return string which will be viewed in UI. See example `page.py`.
 
-Please note that values currently modified by these external functions are reflected only in the save file (not in UI).
-
 ## page.yaml example
 
 ``` YAML
