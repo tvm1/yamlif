@@ -332,16 +332,20 @@ def draw_page(screen, yamlobj, fn, obj, pid, ptitle, msel):
                 win.addstr(i + offset, 1, tmptitle + ": ", cl)
                 offset += 1
             elif 'value' in elem:
-                textlist = textwrap.wrap(elem.get('value'), size_x - 4 - len(tmptitle))
+
+                textlist = elem.get('value', '').rstrip().split('\n')
 
                 for j, ln in enumerate(textlist):
+
+                    ln = ln[0:size_x - 4 - len(tmptitle)]
+
                     if j == 0:
                         win.addstr(i + offset, 1, tmptitle + ": " + str(ln), cl)
                         offset += 1
                     if j == 1:
-                        ln = re.sub('.............$', '... [wrapped]', ln)
+                        if len(textlist) > 2:
+                            ln = re.sub('.............$', '... [wrapped]', ln)
                         win.addstr(i + offset, 1 + len(tmptitle) + 2, str(ln), cl)
-                        # offset += 1
                         break
 
         elif 'textdisplay' in elem:
@@ -930,7 +934,7 @@ def set_value(obj, msel, screen):
         screen.clear()
         screen.border()
         screen.addstr(0, 2, 'ENTER/SPACE: Enter/edit | ESC/BACKSP: Exit | R: Run commands | Q: Quit ',
-                  curses.color_pair(1))
+                      curses.color_pair(1))
         screen.refresh()
 
     elif 'textdisplay' in obj[msel]:
