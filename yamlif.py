@@ -33,6 +33,7 @@ def init_curses():
         quit(1)
 
     curses.start_color()
+    curses.use_default_colors()
 
     curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
     curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)
