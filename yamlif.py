@@ -699,6 +699,12 @@ def save_yaml(fn, yamlobj, pid, obj):
         save_func += '(newobj)'
         log = eval(save_func)
 
+        # reverse mapping back to UI
+        for key, val in newobj.items():
+            for elem in obj:
+                if key in elem.values():
+                    elem['value'] = val
+
     oldsave = {}
 
     # if there's old save, load it
