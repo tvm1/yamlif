@@ -8,6 +8,8 @@ import curses.textpad
 import textwrap
 import re
 
+from editor import Editor
+
 try:
     import yaml
 except ImportError:
@@ -863,6 +865,9 @@ def set_value(obj, msel, screen):
     :return: None.
     """
 
+    # editor needs this
+    maxy, maxx = screen.getmaxyx()
+
     # determine what object we try to change and act accordingly
     if 'checkbox' in obj[msel]:
 
@@ -906,10 +911,12 @@ def set_value(obj, msel, screen):
 
         # if there's value, edit it
         if 'value' in obj[msel]:
-            newval = draw_inputarea(screen, obj[msel]['value'])
+            newval = Editor(screen, inittext=obj[msel]['value'], box=True, win_size=(maxy - 6, maxx - 6),
+                            win_location=(3, 3))()
+
             obj[msel]['value'] = newval
         else:
-            newval = draw_inputarea(screen, '')
+            newval = Editor(screen, box=True, win_size=(maxy - 6, maxx - 6), win_location=(3, 3))()
             obj[msel]['value'] = newval
 
     elif 'textdisplay' in obj[msel]:
