@@ -315,7 +315,7 @@ class Editor(object):
         if len(self.title) >= self.win_size_x:
             self.title = self.title[:-3] + ".."
         if self.max_paragraphs == 1 and self.edit is True:
-            quick_help = "   F2/Enter/^x: Save, F3/ESC/^c: Cancel"
+            quick_help = "   F1: Help, F2/Enter/^x: Save, F3/ESC/^c: Cancel"
         elif self.edit is False:
             quick_help = "   q/F2/^c: Quit, j/k: Scroll up/down"
         else:
