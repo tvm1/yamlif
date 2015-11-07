@@ -923,6 +923,15 @@ def set_value(obj, msel, screen):
                             win_location=(3, 3))()
             obj[msel]['value'] = newval
 
+
+        # reset to previous state
+        curses.curs_set(0)
+        screen.clear()
+        screen.border()
+        screen.addstr(0, 2, 'ENTER/SPACE: Enter/edit | ESC/BACKSP: Exit | R: Run commands | Q: Quit ',
+                  curses.color_pair(1))
+        screen.refresh()
+
     elif 'textdisplay' in obj[msel]:
 
         # open scrollable window
