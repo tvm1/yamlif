@@ -544,7 +544,7 @@ class Editor(object):
         line. Stop when the maximum line length is reached.
 
         """
-        if c not in string.printable:
+        if str(c) not in string.printable:
             return
         para_idx, line_idx, char_idx = self.paragraph
         line = list(self.line)
