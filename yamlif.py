@@ -388,6 +388,7 @@ def draw_page(screen, yamlobj, fn, obj, pid, ptitle, msel):
             msel += 1
     elif ckey == curses.KEY_ENTER or ckey == 10 or ckey == ord(" "):
         set_value(obj, msel, screen)
+
     elif ckey == ord("s") or ckey == ord("S"):
         exval, log = save_yaml(fn, yamlobj, pid, obj)
 
@@ -911,12 +912,15 @@ def set_value(obj, msel, screen):
 
         # if there's value, edit it
         if 'value' in obj[msel]:
-            newval = Editor(screen, inittext=obj[msel]['value'], box=True, win_size=(maxy - 6, maxx - 6),
+            newval = Editor(screen, title='Editing ' + obj[msel]['title'] + " ", inittext=obj[msel]['value'], box=True,
+                            win_size=(maxy - 6, maxx - 6),
                             win_location=(3, 3))()
 
             obj[msel]['value'] = newval
         else:
-            newval = Editor(screen, box=True, win_size=(maxy - 6, maxx - 6), win_location=(3, 3))()
+            newval = Editor(screen, title='Editing ' + obj[msel]['title'] + " ", box=True,
+                            win_size=(maxy - 6, maxx - 6),
+                            win_location=(3, 3))()
             obj[msel]['value'] = newval
 
     elif 'textdisplay' in obj[msel]:
