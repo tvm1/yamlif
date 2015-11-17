@@ -7,13 +7,14 @@ import curses
 import curses.textpad
 import textwrap
 import re
-
 from editor import Editor
 
 try:
     import yaml
 except ImportError:
-    print("This application requires PYYAML module to work correctly. See: http://pyyaml.org")
+    print(
+        "This application requires PYYAML module to work correctly. See: "
+        "http://pyyaml.org")
     quit(1)
 
 
@@ -105,8 +106,8 @@ def draw_menu(screen, yamlobj, menu_titles, mtitle, msel):
     pos_y = int(maxy / 2 - size_y / 2)
     pos_x = int(maxx / 2 - size_x / 2)
 
-    screen.addstr(0, 2, 'ENTER/SPACE: Enter/edit | ESC/BACKSP: Exit | R: Run commands | Q: Quit ',
-                  curses.color_pair(1))
+    screen.addstr(0, 2, 'ENTER/SPACE: Enter/edit | ESC/BACKSP: Exit | R: Run '
+                        'commands | Q: Quit ', curses.color_pair(1))
 
     # create actual window and border
     win = curses.newwin(size_y, size_x, pos_y, pos_x)
@@ -145,7 +146,7 @@ def draw_menu(screen, yamlobj, menu_titles, mtitle, msel):
         win.refresh()
         ckey = screen.getch()
 
-        # read keys and redraw, return item index on ENTER, return -1 if leaving
+        # read keys and redraw, return item index on ENTER, return -1 on exit
         if ckey == curses.KEY_UP:
             if msel > 0:
                 msel -= 1
@@ -289,23 +290,29 @@ def draw_page(screen, yamlobj, fn, obj, pid, ptitle, msel):
             newelem = 'checkbox'
 
             if elem.get('value', False) is True:
-                win.addstr(i + offset, 1, '[*] ' + elem.get('title', '')[0:size_x - 6], cl)
+                win.addstr(i + offset, 1,
+                           '[*] ' + elem.get('title', '')[0:size_x - 6], cl)
             else:
-                win.addstr(i + offset, 1, '[ ] ' + elem.get('title', '')[0:size_x - 6], cl)
+                win.addstr(i + offset, 1,
+                           '[ ] ' + elem.get('title', '')[0:size_x - 6], cl)
 
         elif 'radio' in elem:
             newelem = 'radio'
             if elem.get('value', False) is True:
-                win.addstr(i + offset, 1, '(*) ' + elem.get('title', '')[0:size_x - 6], cl)
+                win.addstr(i + offset, 1,
+                           '(*) ' + elem.get('title', '')[0:size_x - 6], cl)
             else:
-                win.addstr(i + offset, 1, '( ) ' + elem.get('title', '')[0:size_x - 6], cl)
+                win.addstr(i + offset, 1,
+                           '( ) ' + elem.get('title', '')[0:size_x - 6], cl)
 
         elif 'textbox' in elem:
             newelem = 'textbox'
 
             # value and title might be too long
-            if len(str(elem.get('title'))) + len(str(elem.get('value'))) + 4 <= size_x:
-                win.addstr(i + offset, 1, elem.get('title') + ": " + str(elem.get('value', '')), cl)
+            if len(str(elem.get('title'))) + len(
+                    str(elem.get('value'))) + 4 <= size_x:
+                win.addstr(i + offset, 1, elem.get('title') + ": " + str(
+                    elem.get('value', '')), cl)
             else:
                 # so truncate it to fit the screen
                 spc = size_x - len(str(elem.get('title'))) - 4
@@ -340,12 +347,14 @@ def draw_page(screen, yamlobj, fn, obj, pid, ptitle, msel):
                     ln = ln[0:size_x - 4 - len(tmptitle)]
 
                     if j == 0:
-                        win.addstr(i + offset, 1, tmptitle + ": " + str(ln), cl)
+                        win.addstr(i + offset, 1, tmptitle + ": " + str(ln),
+                                   cl)
                         offset += 1
                     if j == 1:
                         if len(textlist) > 2:
                             ln = re.sub('.............$', '... [wrapped]', ln)
-                        win.addstr(i + offset, 1 + len(tmptitle) + 2, str(ln), cl)
+                        win.addstr(i + offset, 1 + len(tmptitle) + 2, str(ln),
+                                   cl)
                         break
 
         elif 'textdisplay' in elem:
@@ -474,8 +483,9 @@ def draw_popup(screen, text='empty'):
         win.attroff(curses.A_BOLD)
 
         if size_x >= 80:
-            win.addstr(0, 2, ' ARROWS: Up/down | ENTER/SPACE/BACKSPACE/ESC: Exit view | Q: Quit ',
-                       curses.color_pair(1))
+            win.addstr(0, 2,
+                       ' ARROWS: Up/down | ENTER/SPACE/BACKSPACE/ESC: Exit '
+                       'view | Q: Quit ', curses.color_pair(1))
 
         # display arrows, if scrollable
         if start_pos != 0:
@@ -529,7 +539,8 @@ def draw_inputbox(screen, text='empty'):
     # create actual window and border
     win = curses.newwin(3, size_x, pos_y, pos_x)
     win.border()
-    win.addstr(0, 1, 'Please insert value (EMACS keys available):', curses.color_pair(1))
+    win.addstr(0, 1, 'Please insert value (EMACS keys available):',
+               curses.color_pair(1))
     win.refresh()
 
     # derived subwindow
@@ -727,8 +738,8 @@ def save_yaml(fn, yamlobj, pid, obj):
 
 def get_menulist(yamlobj, root=False):
     """
-    This function parses objects returned by get_menucontent() and prepares input for
-    draw_menu().
+    This function parses objects returned by get_menucontent() and prepares
+    input for draw_menu().
 
     :param yamlobj: Python object ( nested list / dicts ).
     :param root: True only if parsing YAML hierarchy from top.
@@ -761,7 +772,7 @@ def get_nodetype(obj, objid):
     """
     Returns key of the object with given ID. (eg., menu, page, etc. )
 
-    :param obj: Structure containing YAML object ( nested lists / dictionaries ).
+    :param obj: Structure containing YAML object ( nested lists / dicts ).
     :param objid: YAML ID of given node.
     :return: Key of given ID.
     """
@@ -788,7 +799,7 @@ def get_title(obj, objid):
     """
     Returns title value of the object with given ID.
 
-    :param obj: Structure containing YAML object ( nested lists / dictionaries ).
+    :param obj: Structure containing YAML object ( nested lists / dicts ).
     :param objid: YAML ID of given node.
     :return: Title of given ID.
     """
@@ -816,7 +827,7 @@ def get_save_function(obj, objid):
     """
     Returns on_save function name the object with given ID.
 
-    :param obj: Structure containing YAML object ( nested lists / dictionaries ).
+    :param obj: Structure containing YAML object ( nested lists / dicts ).
     :param objid: YAML ID of given page.
     :return: Name of onsave function.
     """
@@ -844,7 +855,7 @@ def get_objectcontent(obj, objid):
     """
     Returns list / dictionary structure that is content of given YAML ID.
 
-    :param obj: Structure containing YAML object ( nested lists / dictionaries ):
+    :param obj: Structure containing YAML object ( nested lists / dicts ).
     :param objid: YAML ID of given node.
     :return: Nested list / dictionary.
     """
@@ -923,24 +934,27 @@ def set_value(obj, msel, screen):
 
         # if there's value, edit it
         if 'value' in obj[msel]:
-            newval = Editor(screen, title='Editing ' + obj[msel]['title'] + " ", inittext=obj[msel]['value'], box=True,
+            newval = Editor(screen,
+                            title='Editing ' + obj[msel]['title'] + " ",
+                            inittext=obj[msel]['value'], box=True,
                             win_size=(maxy - 6, maxx - 6),
                             win_location=(3, 3))()
 
             obj[msel]['value'] = newval
         else:
-            newval = Editor(screen, title='Editing ' + obj[msel]['title'] + " ", box=True,
+            newval = Editor(screen,
+                            title='Editing ' + obj[msel]['title'] + " ",
+                            box=True,
                             win_size=(maxy - 6, maxx - 6),
                             win_location=(3, 3))()
             obj[msel]['value'] = newval
-
 
         # reset to previous state
         curses.curs_set(0)
         screen.clear()
         screen.border()
-        screen.addstr(0, 2, 'ENTER/SPACE: Enter/edit | ESC/BACKSP: Exit | R: Run commands | Q: Quit ',
-                      curses.color_pair(1))
+        screen.addstr(0, 2, 'ENTER/SPACE: Enter/edit | ESC/BACKSP: Exit | R: '
+                            'Run commands | Q: Quit ', curses.color_pair(1))
         screen.refresh()
 
     elif 'textdisplay' in obj[msel]:
@@ -951,7 +965,8 @@ def set_value(obj, msel, screen):
 
 def main():
     """
-    Contains main loop that loads YAML, draws menu and decides what to do with selected items.
+    Contains main loop that loads YAML, draws menu and decides what to do
+    with selected items.
 
     :return: Exit value
     """
@@ -1013,14 +1028,17 @@ def main():
 
             # don't leave page unless ESC is pressed
             while psel != -1:
-                psel = draw_page(stdscr, yamlobj, fn, get_objectcontent(yamlobj, mid), mid, get_title(yamlobj, mid),
+                psel = draw_page(stdscr, yamlobj, fn,
+                                 get_objectcontent(yamlobj, mid), mid,
+                                 get_title(yamlobj, mid),
                                  psel)
 
         elif eltype == 'menu':
 
             # entering new menu, get title and content
             mtitle = get_title(yamlobj, mid)
-            menu_ids, menu_titles = get_menulist(get_objectcontent(yamlobj, mid))
+            menu_ids, menu_titles = get_menulist(
+                get_objectcontent(yamlobj, mid))
             msel = 0
 
     # quit
