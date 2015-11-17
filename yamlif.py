@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+"""
+This module loads YAML configuration, presents UI to user and allows him to
+set and save values to another YAML file.
+"""
 
 import sys
 import os
@@ -621,7 +625,9 @@ def load_service_functions(fn, globs):
     """
     This function imports service functions if they are present.
 
-    :return: 0 if success, else 1
+    :param fn: Filename of opened file.
+    :param globs: Caller's globals().
+    :return: 0 if success, else 1.
     """
 
     fn = re.sub('.yaml$', '.py', fn)
@@ -635,7 +641,7 @@ def load_service_functions(fn, globs):
 
 def run_commands(yamlobj):
     """
-    Runs commands stored in YAML
+    Runs commands stored in YAML.
 
     :param yamlobj: Python object ( nested list / dicts ).
     :return: None.
