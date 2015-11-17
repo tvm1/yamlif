@@ -3,6 +3,8 @@
 YAML InterFace is application that provides user friendly menu hierarchy based on predefined YAML file. User can
 traverse the menu hierarchy and edit predefined values. Selected values are saved for further usage.
 
+![yamlif](https://cloud.githubusercontent.com/assets/12072674/11207599/6deb06e8-8d16-11e5-9719-ad7bf67f5222.png)
+
 ## License
 
 MIT
